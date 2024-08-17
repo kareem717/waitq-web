@@ -22,6 +22,8 @@ import { Button } from "@/components/ui/button"
 import { DialogTrigger } from "@radix-ui/react-dialog"
 import { Icons } from "@/components/icons"
 import { toast } from "sonner"
+import { useAction } from "next-safe-action/hooks"
+import { deleteWaitlist } from "@/actions/waitlist"
 
 export interface DeleteWaitlistCardProps extends ComponentPropsWithoutRef<typeof Card> {
   waitlist: Waitlist
@@ -30,15 +32,27 @@ export interface DeleteWaitlistCardProps extends ComponentPropsWithoutRef<typeof
 export const DeleteWaitlistCard: FC<DeleteWaitlistCardProps> = ({ waitlist, ...props }) => {
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const handleDeleteWaitlist = async () => {
-    setIsDeleting(true)
-    //pause for 3 seconds
-    await new Promise(resolve => setTimeout(resolve, 3000))
-    setIsDeleting(false)
+  const { executeAsync } = useAction(deleteWaitlist, {
+    onExecute: () => {
+      setIsDeleting(true)
+    },
+    onError: ({ error }) => {
+      toast.error("Something went wrong!", {
+        description: error?.serverError || "An unknown error occurred",
+      })
+    },
+    onSuccess: () => {
+      toast.success("Done!", {
+        description: "The waitlist has been deleted.",
+      })
+    },
+    onSettled: () => {
+      setIsDeleting(false)
+    }
+  })
 
-    toast.success("Done!", {
-      description: "The waitlist has been deleted.",
-    })
+  const handleDeleteWaitlist = async () => {
+    await executeAsync({ id: waitlist.id })
   }
 
   return (

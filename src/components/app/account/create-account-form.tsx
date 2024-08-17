@@ -20,6 +20,7 @@ import { createAccount } from "@/actions/account";
 import { useState } from "react";
 import { Icons } from "@/components/icons";
 import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 
 const formSchema = z.object({
 	username: z.string().min(3).max(32),
@@ -37,24 +38,34 @@ export const CreateAccountForm = () => {
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof formSchema>) {
-		try {
-			if (!user) {
-				throw new Error("User not found");
-			}
-
-			setIsCreating(true);
-			const response = await createAccount(values.username, user.id);
+	const { executeAsync } = useAction(createAccount, {
+		onSuccess: () => {
 			toast.success("Account created successfully!");
+			form.reset();
 			router.refresh();
-
-		} catch (error) {
+		},
+		onError: ({ error }) => {
 			toast.error("Something went wrong", {
-				description: (error as Error).message,
-			});
-		} finally {
+				description: error.serverError || "An unknown error occurred",
+			})
+		},
+		onSettled: () => {
 			setIsCreating(false);
+		},
+		onExecute: () => {
+			setIsCreating(true);
+		},
+	});
+
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		if (!user) {
+			throw new Error("User not found");
 		}
+
+		await executeAsync({
+			username: values.username,
+			userId: user.id
+		});
 	}
 
 	return (

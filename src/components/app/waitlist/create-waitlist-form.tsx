@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { createWaitlist } from "@/actions/waitlist";
 import { useAuth } from "@/components/providers/auth-provider";
+import { useAction } from "next-safe-action/hooks";
 
 export interface CreateWaitlistFormProps extends ComponentPropsWithoutRef<'form'> {
   onSuccess?: () => void
@@ -45,16 +46,29 @@ export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onS
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsCreating(true)
+  const { executeAsync } = useAction(createWaitlist, {
+    onSuccess: () => {
+      form.reset()
+      toast.success("Done!", {
+        description: "Your waitlist has been created.",
+      })
+    },
+    onError: ({ error }) => {
+      toast.error("Something went wrong", {
+        description: error.serverError || "An unknown error occurred",
+      })
+    },
+    onSettled: () => {
+      setIsCreating(false)
+      onSuccess?.()
+    },
+    onExecute: () => {
+      setIsCreating(true)
+    }
+  })
 
-    await createWaitlist(values)
-    toast.success("Done!", {
-      description: "Your waitlist has been created.",
-    })
-    
-    setIsCreating(false)
-    onSuccess?.()
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await executeAsync({ waitlist: values })
   }
 
   return (

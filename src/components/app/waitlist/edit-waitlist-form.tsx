@@ -21,6 +21,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { updateWaitlist } from "@/actions/waitlist";
 import { useAuth } from "@/components/providers/auth-provider";
+import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 
 export interface EditWaitlistFormProps extends ComponentPropsWithoutRef<'form'> {
   waitlist: Waitlist
@@ -34,6 +36,7 @@ const formSchema = z.object({
 export const EditWaitlistForm: FC<EditWaitlistFormProps> = ({ className, onSuccess, waitlist, ...props }) => {
   const [isUpdating, setIsUpdating] = useState(false)
   const { account } = useAuth()
+  const router = useRouter()
 
   if (!account) throw Error("Account not found")
 
@@ -44,15 +47,30 @@ export const EditWaitlistForm: FC<EditWaitlistFormProps> = ({ className, onSucce
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsUpdating(true)
+  const { executeAsync } = useAction(updateWaitlist, {
+    onSuccess: () => {
+      toast.success("Done!", {
+        description: "Your waitlist has been updated.",
+      })
+      onSuccess?.()
+      router.refresh()
+    },
+    onError: ({ error }) => {
+      toast.error("Something went wrong", {
+        description: error.serverError || "An unknown error occurred",
+      })
+    },
+    onSettled: () => {
+      setIsUpdating(false)
+      onSuccess?.()
+    },
+    onExecute: () => {
+      setIsUpdating(true)
+    }
+  })
 
-    await updateWaitlist(waitlist.id, values)
-    toast.success("Done!", {
-      description: "Your waitlist has been updated.",
-    })
-    setIsUpdating(false)
-    onSuccess?.()
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await executeAsync({ id: waitlist.id, waitlist: values })
   }
 
   return (

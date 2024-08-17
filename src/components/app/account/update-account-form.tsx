@@ -19,6 +19,8 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { updateAccount } from "@/actions/account";
 import { useState } from "react";
 import { Icons } from "@/components/icons";
+import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
 
 const formSchema = z.object({
   username: z.string().min(3).max(32),
@@ -26,6 +28,7 @@ const formSchema = z.object({
 
 export const UpdateAccountForm = () => {
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const router = useRouter();
   const { account } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,24 +38,32 @@ export const UpdateAccountForm = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsUpdating(true);
 
-    try {
-      if (!account) {
-        throw new Error("Account not found");
-      }
-
-      const response = await updateAccount(account.id, values);
+  const { executeAsync } = useAction(updateAccount, {
+    onSuccess: () => {
       toast.success("Account updated successfully!");
-    } catch (error) {
-      console.error("Error updating account", error);
+      form.reset();
+      router.refresh();
+    },
+    onError: ({ error }) => {
       toast.error("Something went wrong", {
-        description: (error as Error).message,
-      });
-    } finally {
+        description: error.serverError || "An unknown error occurred",
+      })
+    },
+    onSettled: () => {
       setIsUpdating(false);
+    },
+    onExecute: () => {
+      setIsUpdating(true);
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!account) {
+      throw new Error("Account not found");
     }
+
+    const resp = await executeAsync({ id: account.id, fields: values });
   }
 
   return (

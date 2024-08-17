@@ -1,13 +1,20 @@
 "use server";
 
-import API, { UpdateAccountFieldsStruct } from "@/lib/sdk";
-import { ResponseError } from "@/lib/sdk/runtime";
+import API from "@/lib/sdk";
+import { actionClient } from "@/lib/safe-action";
+import { z } from "zod";
 
-export async function createAccount(username: string, userId: string) {
-	try {
+export const createAccount = actionClient
+	.schema(
+		z.object({
+			username: z.string().min(3).max(10),
+			userId: z.string().uuid(),
+		})
+	)
+	.action(async ({ parsedInput: { username, userId } }) => {
 		const { accountsApi } = await API();
 
-		const response = await accountsApi.createAccount({
+		return await accountsApi.createAccount({
 			createAccountInputBody: {
 				account: {
 					userId,
@@ -15,65 +22,36 @@ export async function createAccount(username: string, userId: string) {
 				},
 			},
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while creating the account"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function updateAccount(
-	id: string,
-	fields: UpdateAccountFieldsStruct
-) {
-	try {
+export const updateAccount = actionClient
+	.schema(
+		z.object({
+			id: z.string().uuid(),
+			fields: z.object({
+				username: z.string().min(3).max(10),
+			}),
+		})
+	)
+	.action(async ({ parsedInput: { id, fields } }) => {
 		const { accountsApi } = await API();
 
 		// Backend already validates that the user is the owner of the account
-		const response = await accountsApi.updateAccount({
+		return await accountsApi.updateAccount({
 			id,
 			updateAccountInputBody: {
 				account: fields,
 			},
 		});
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
+	});
 
-			throw new Error(
-				errorDetails.detail || "An error occurred while creating the account"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function getAccountByUserId(userId: string) {
-	try {
+export const getAccountByUserId = actionClient
+	.schema(z.object({ userId: z.string().uuid() }))
+	.action(async ({ parsedInput: { userId } }) => {
 		const { accountsApi } = await API();
 
-		const response = await accountsApi.getAccountsByUserId({
+		return await accountsApi.getAccountsByUserId({
 			userId,
 			includeDeleted: false,
 		});
-
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the account"
-			);
-		}
-		throw error;
-	}
-}
+	});

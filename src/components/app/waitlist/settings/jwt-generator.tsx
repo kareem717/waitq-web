@@ -35,7 +35,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { genNewJWT } from "@/actions/waitlist"
-
+import { useRouter } from "next/navigation"
+import { useAction } from "next-safe-action/hooks"
 
 export interface WaitlistJWTGeneratorProps extends ComponentPropsWithoutRef<typeof DropdownMenuTrigger> {
   waitlist: Waitlist
@@ -50,6 +51,7 @@ export const WaitlistJWTGenerator: FC<WaitlistJWTGeneratorProps> = ({ waitlist, 
   const [isCustomSecretDialogOpen, setIsCustomSecretDialogOpen] = useState(false)
   const [isRandomSecretDialogOpen, setIsRandomSecretDialogOpen] = useState(false)
   const [isGeneratingSecret, setIsGeneratingSecret] = useState(false)
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,14 +60,28 @@ export const WaitlistJWTGenerator: FC<WaitlistJWTGeneratorProps> = ({ waitlist, 
     },
   })
 
+  const { executeAsync } = useAction(genNewJWT, {
+    onExecute: () => {
+      setIsGeneratingSecret(true)
+    },
+    onSuccess: () => {
+      toast.success("Done!", {
+        description: "A new JWT has been generated for this waitlist. Please refresh the page to see the new credentials."
+      })
+      router.refresh()
+    },
+    onError: ({ error }) => {
+      toast.error("Something went wrong", {
+        description: error?.serverError || "An unknown error occurred",
+      })
+    },
+    onSettled: () => {
+      setIsGeneratingSecret(false)
+    }
+  })
+
   const handleGenerateSecret = async (secret?: string) => {
-    setIsGeneratingSecret(true)
-    await genNewJWT(waitlist.id, secret)
-    toast.success("Done!", {
-      description: "A new JWT has been generated for this waitlist. Please refresh the page to see the new credentials."
-    })
-    setIsGeneratingSecret(false)
-    onSuccess?.()
+    await executeAsync({ id: waitlist.id, jwtSecret: secret })
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -75,9 +91,8 @@ export const WaitlistJWTGenerator: FC<WaitlistJWTGeneratorProps> = ({ waitlist, 
       })
       return
     }
-    setIsGeneratingSecret(true)
+
     await handleGenerateSecret(values.jwtSecret)
-    setIsGeneratingSecret(false)
   }
 
   return (

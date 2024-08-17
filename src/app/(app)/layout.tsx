@@ -20,16 +20,16 @@ export default async function AppLayout({
   let account: Account | null = null;
 
   if (data?.user) {
-    const resp = await getAccountByUserId(data.user.id);
+    const resp = await getAccountByUserId({ userId: data.user.id });
 
-    switch (resp.accounts.length) {
+    switch (resp?.data?.accounts.length) {
       case 0:
         redirect(redirects.auth.createAccount);
       case 1:
-        account = resp.accounts[0];
+        account = resp.data.accounts[0];
         break;
       default:
-        throw new Error("Something went wrong.");
+        throw new Error(resp?.serverError || "Something went wrong.");
     }
   } else {
     redirect(redirects.auth.login);

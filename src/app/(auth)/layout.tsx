@@ -14,12 +14,12 @@ export default async function AuthLayout({
 	let account = null;
 
 	if (data?.user) {
-		const resp = await getAccountByUserId(data.user.id);
-		account = resp.accounts[0];
+		const resp = await getAccountByUserId({ userId: data.user.id });
+		account = resp?.data?.accounts[0];
 	}
 
 	return (
-		<AuthProvider user={data?.user} account={account}>
+		<AuthProvider user={data?.user} account={account || null}>
 			<div className="h-full w-full grid grid-cols-2">
 				<div className="bg-secondary hidden md:col-span-1 md:flex flex-col justify-between items-start p-8" >
 					<div className="flex items-center">

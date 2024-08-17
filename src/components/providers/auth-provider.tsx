@@ -6,8 +6,8 @@ import { createContext, useContext } from 'react';
 import { Account } from '@/lib/sdk';
 
 export type AuthContextType = {
-  user: SupabaseUser | null
-  account: Account | null
+  user: SupabaseUser | null 
+  account: Account | null 
 };
 
 const AuthContext = createContext<AuthContextType>({

@@ -9,6 +9,7 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { leaveWaitlist } from "@/actions/waitlist";
+import { useAction } from "next-safe-action/hooks";
 
 export interface LeaveWaitlistFormProps extends ComponentPropsWithoutRef<'form'> {
   waitlistId: string
@@ -30,17 +31,29 @@ export const LeaveWaitlistForm: FC<LeaveWaitlistFormProps> = ({ className, onSuc
     },
   })
 
+  const { executeAsync } = useAction(leaveWaitlist, {
+    onSuccess: () => {
+      toast.success("Womp womp!", {
+        description: "You've been removed from the waitlist."
+      })
+      onSuccess?.()
+    },
+    onError: ({ error }) => {
+      toast.error("Something went wrong", {
+        description: error.serverError || "An unknown error occurred",
+      })
+    },
+    onSettled: () => {
+      setIsLeaveing(false)
+      onSuccess?.()
+    },
+    onExecute: () => {
+      setIsLeaveing(true)
+    }
+  })
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsLeaveing(true)
-
-    await leaveWaitlist(waitlistId, values.encodedEmail)
-
-    toast.success("Womp womp!", {
-      description: "You've been removed from the waitlist."
-    })
-
-    setIsLeaveing(false)
-    onSuccess?.()
+    await executeAsync({ id: waitlistId, encodedEmail: values.encodedEmail })
   }
 
   return (

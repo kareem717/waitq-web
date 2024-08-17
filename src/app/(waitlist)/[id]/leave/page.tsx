@@ -1,5 +1,4 @@
 import { getWaitlistById } from "@/actions/waitlist";
-import { JoinWaitlistForm } from "@/components/app/waitlist/join-waitlist-form";
 import { LeaveWaitlistForm } from "@/components/app/waitlist/leave-waitlist-form";
 import {
   Card,
@@ -9,15 +8,19 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { notFound } from "next/navigation";
-import { validate as isValidUuid } from 'uuid';
-
 
 export default async function UnsubscribePage({ params, searchParams }: { params: { id: string }, searchParams: { ee: string } }) {
-  if (!isValidUuid(params.id)) {
-    notFound();
+  const resp = await getWaitlistById({ id: params.id })
+
+  if (!resp?.data) {
+    if (resp?.serverError) {
+      throw new Error(resp.serverError)
+    }
+
+    notFound()
   }
 
-  const { waitlist } = await getWaitlistById(params.id)
+  const waitlist = resp.data?.waitlist
 
   if (!waitlist || waitlist.deletedAt != null) {
     notFound()

@@ -42,13 +42,20 @@ const getMenuList = async (pathname: string, accountId: string) => {
     }));
 
   const processWaitlists = async (accountId: string, pathname: string): Promise<SidebarMenu[]> => {
-    const waitlists = await getWaitlistByAccountId(accountId, {
-      page: 1,
-      pageSize: 999,
-      includeDeleted: false,
+    const resp = await getWaitlistByAccountId({
+      accountId,
+      paginationParams: {
+        page: 1,
+        pageSize: 999,
+        includeDeleted: false,
+      }
     });
 
-    return waitlists.waitlists.flatMap(waitlist => {
+    if (!resp?.data) {
+      throw new Error(resp?.serverError || "Something went wrong")
+    }
+
+    return resp.data.waitlists.flatMap(waitlist => {
       const index = redirects.app.waitlist.index.replace(":id", waitlist.id);
       const settings = redirects.app.waitlist.settings.replace(":id", waitlist.id);
       const edit = redirects.app.waitlist.edit.replace(":id", waitlist.id);

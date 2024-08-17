@@ -1,65 +1,49 @@
 "use server";
 
-import API, {
-	CreateWaitlistFieldsStruct,
-	PaginationRequest,
-	UpdateWaitlistFieldsStruct,
-} from "@/lib/sdk";
-import { ResponseError } from "@/lib/sdk/runtime";
+import API from "@/lib/sdk";
+import { actionClient } from "@/lib/safe-action";
+import { z } from "zod";
 
-export async function getWaitlistByAccountId(
-	accountId: string,
-	paginationParams: PaginationRequest
-) {
-	try {
+const paginationRequestSchema = z.object({
+	page: z.number().optional(),
+	pageSize: z.number().optional(),
+	includeDeleted: z.boolean().optional().default(false),
+});
+
+export const getWaitlistByAccountId = actionClient
+	.schema(
+		z.object({
+			accountId: z.string().uuid(),
+			paginationParams: paginationRequestSchema,
+		})
+	)
+	.action(async ({ parsedInput: { accountId, paginationParams } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.getWaitlistsByAccountId({
+		return await waitlistsApi.getWaitlistsByAccountId({
 			accountId,
 			getWaitlistByAccountIDInputBody: {
 				paginationParams,
 			},
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function getWaitlistById(id: string) {
-	try {
+export const getWaitlistById = actionClient
+	.schema(z.object({ id: z.string().uuid() }))
+	.action(async ({ parsedInput: { id } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.getWaitlistById({
+		return await waitlistsApi.getWaitlistById({
 			id,
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function genNewJWT(id: string, jwtSecret?: string) {
-	try {
+export const genNewJWT = actionClient
+	.schema(z.object({ id: z.string().uuid(), jwtSecret: z.string().optional() }))
+	.action(async ({ parsedInput: { id, jwtSecret } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.generateNewWaitlistJwtSecret({
+		return await waitlistsApi.generateNewWaitlistJwtSecret({
 			id,
 			updateWaitlistJWTSecretInputBody: {
 				waitlist: {
@@ -67,155 +51,99 @@ export async function genNewJWT(id: string, jwtSecret?: string) {
 				},
 			},
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function createWaitlist(waitlist: CreateWaitlistFieldsStruct) {
-	try {
+export const createWaitlist = actionClient
+	.schema(
+		z.object({
+			waitlist: z.object({
+				name: z.string(),
+				accountId: z.string().uuid(),
+			}),
+		})
+	)
+	.action(async ({ parsedInput: { waitlist } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.createWaitlist({
+		return await waitlistsApi.createWaitlist({
 			createWaitlistInputBody: {
 				waitlist,
 			},
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function updateWaitlist(
-	id: string,
-	waitlist: UpdateWaitlistFieldsStruct
-) {
-	try {
+export const updateWaitlist = actionClient
+	.schema(
+		z.object({
+			id: z.string().uuid(),
+			waitlist: z.object({
+				name: z.string(),
+			}),
+		})
+	)
+	.action(async ({ parsedInput: { id, waitlist } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.updateWaitlist({
+		return await waitlistsApi.updateWaitlist({
 			id,
 			updateWaitlistInputBody: {
 				waitlist,
 			},
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function joinWaitlist(id: string, email: string) {
-	try {
+export const joinWaitlist = actionClient
+	.schema(z.object({ id: z.string().uuid(), email: z.string() }))
+	.action(async ({ parsedInput: { id, email } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.addEmailsToWaitlist({
+		return await waitlistsApi.addEmailsToWaitlist({
 			id,
 			addEmailsInputBody: {
 				emails: [email],
 			},
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function leaveWaitlist(id: string, encodedEmail: string) {
-	try {
+export const leaveWaitlist = actionClient
+	.schema(z.object({ id: z.string().uuid(), encodedEmail: z.string() }))
+	.action(async ({ parsedInput: { id, encodedEmail } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.unsubscribeFromWaitlist({
+		return await waitlistsApi.unsubscribeFromWaitlist({
 			id,
 			unsubscribeEmailInputBody: {
 				encodedEmail,
 			},
 		});
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
+	});
 
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function getWaitlistAnalytics(id: string) {
-	try {
+export const getWaitlistAnalytics = actionClient
+	.schema(z.object({ id: z.string().uuid() }))
+	.action(async ({ parsedInput: { id } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.getWaitlistAnalytics({
+		return await waitlistsApi.getWaitlistAnalytics({
 			id,
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
-
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
-
-export async function exportEmailsToCSV(id: string) {
-	try {
+export const exportEmailsToCSV = actionClient
+	.schema(z.object({ id: z.string().uuid() }))
+	.action(async ({ parsedInput: { id } }) => {
 		const { waitlistsApi } = await API();
 
-		const response = await waitlistsApi.exportWaitlistEmailsToCsv({
+		return await waitlistsApi.exportWaitlistEmailsToCsv({
 			id,
 		});
+	});
 
-		return response;
-	} catch (error) {
-		if (error instanceof ResponseError) {
-			const errorDetails = await error.response.json();
+export const deleteWaitlist = actionClient
+	.schema(z.object({ id: z.string().uuid() }))
+	.action(async ({ parsedInput: { id } }) => {
+		const { waitlistsApi } = await API();
 
-			throw new Error(
-				errorDetails.detail || "An error occurred while fetching the waitlist"
-			);
-		}
-		throw error;
-	}
-}
+		return await waitlistsApi.deleteWaitlist({
+			id,
+		});
+	});

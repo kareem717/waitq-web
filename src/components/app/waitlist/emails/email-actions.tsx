@@ -19,13 +19,19 @@ export const WaitlistEmailActions: FC<WaitlistEmailActionsProps> = ({ waitlistId
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleExportToCSV = async () => {
-    const csv = await exportEmailsToCSV(waitlistId)
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, `${waitlistId}-${new Date().toISOString()}.csv`);
-    toast.success("Done!", {
-      description: "The email list has been exported to CSV.",
-    })
-    setIsDialogOpen(false)
+    const resp = await exportEmailsToCSV({ id: waitlistId })
+    if (resp?.data) {
+      const blob = new Blob([resp.data], { type: 'text/csv;charset=utf-8;' });
+      saveAs(blob, `${waitlistId}-${new Date().toISOString()}.csv`);
+      toast.success("Done!", {
+        description: "The email list has been exported to CSV.",
+      })
+      setIsDialogOpen(false)
+    } else {
+      toast.error("Something went wrong", {
+        description: resp?.serverError || "An unknown error occurred",
+      })
+    }
   }
 
   return (

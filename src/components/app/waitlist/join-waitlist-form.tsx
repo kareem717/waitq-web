@@ -19,6 +19,7 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { joinWaitlist } from "@/actions/waitlist";
+import { useAction } from "next-safe-action/hooks";
 
 export interface JoinWaitlistFormProps extends ComponentPropsWithoutRef<'form'> {
   waitlistId: string
@@ -39,17 +40,30 @@ export const JoinWaitlistForm: FC<JoinWaitlistFormProps> = ({ className, onSucce
     },
   })
 
+
+  const { executeAsync } = useAction(joinWaitlist, {
+    onSuccess: () => {
+      toast.success("Done!", {
+        description: "Your waitlist has been updated.",
+      })
+      onSuccess?.()
+    },
+    onError: ({ error }) => {
+      toast.error("Something went wrong", {
+        description: error.serverError || "An unknown error occurred",
+      })
+    },
+    onSettled: () => {
+      setIsJoining(false)
+      onSuccess?.()
+    },
+    onExecute: () => {
+      setIsJoining(true)
+    }
+  })
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsJoining(true)
-
-    await joinWaitlist(waitlistId, values.email)
-
-    toast.success("You've in!", {
-      description: "You've been added to the waitlist."
-    })
-
-    setIsJoining(false)
-    onSuccess?.()
+    await executeAsync({ id: waitlistId, email: values.email })
   }
 
   return (

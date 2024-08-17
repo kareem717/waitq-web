@@ -8,14 +8,18 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { notFound } from "next/navigation";
-import { validate as isValidUuid } from 'uuid';
 
 export default async function JoinQueuePage({ params }: { params: { id: string } }) {
-  if (!isValidUuid(params.id)) {
-    notFound();
+  const resp = await getWaitlistById({ id: params.id })
+
+  if (!resp?.data) {
+    if (resp?.serverError) {
+      throw new Error(resp.serverError)
+    }
+    notFound()
   }
 
-  const { waitlist } = await getWaitlistById(params.id)
+  const waitlist = resp.data?.waitlist
 
   if (!waitlist || waitlist.deletedAt != null) {
     notFound()

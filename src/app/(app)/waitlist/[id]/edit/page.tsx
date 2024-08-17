@@ -9,7 +9,13 @@ import {
 import { getWaitlistById } from "@/actions/waitlist"
 
 export default async function UpdateWaitlistPage({ params }: { params: { id: string } }) {
-  const { waitlist } = await getWaitlistById(params.id)
+  const resp = await getWaitlistById({ id: params.id })
+
+  const waitlist = resp?.data?.waitlist
+
+  if (!waitlist) {
+    throw new Error(resp?.serverError || "Something went wrong.")
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full px-2">
@@ -19,7 +25,9 @@ export default async function UpdateWaitlistPage({ params }: { params: { id: str
           <CardDescription>Edit a waitlist to update its settings.</CardDescription>
         </CardHeader>
         <CardContent>
-          <EditWaitlistForm waitlist={waitlist} />
+          <EditWaitlistForm
+            waitlist={waitlist}
+          />
         </CardContent>
       </Card>
     </div>
