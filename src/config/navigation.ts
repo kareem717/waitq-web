@@ -1,13 +1,13 @@
 import { Icons } from "@/components/icons";
 import redirects from "./redirects";
 
-type Submenu = {
+export type Submenu = {
 	href: string;
 	label: string;
 	pathIdentifier: string;
 };
 
-type Menu = {
+export type Menu = {
 	href: string;
 	label: string;
 	pathIdentifier: string;
@@ -15,12 +15,12 @@ type Menu = {
 	submenus: Submenu[];
 };
 
-type Group = {
+export type Group = {
 	groupLabel: string;
 	menus: Menu[];
 };
 
-const NevigationConfig: Group[] = [
+const NavigationConfig: Group[] = [
 	{
 		groupLabel: "",
 		menus: [
@@ -52,6 +52,18 @@ const NevigationConfig: Group[] = [
 			},
 		],
 	},
+	{
+		groupLabel: "Waitlists",
+		menus: [
+			{
+				href: redirects.app.waitlist.create,
+				label: "Create",
+				pathIdentifier: redirects.app.waitlist.create,
+				icon: "add",
+				submenus: [],
+			},
+		],
+	},
 ];
 
-export default NevigationConfig;
+export default NavigationConfig;

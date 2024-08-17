@@ -1,7 +1,7 @@
 import { LogoDiv } from "@/components/logo-div";
 import AuthProvider from "@/components/providers/auth-provider";
 import supabase from "@/lib/utils/supabase/server";
-import { getAccount } from "@/actions/account";
+import { getAccountByUserId } from "@/actions/account";
 
 export default async function AuthLayout({
 	children,
@@ -14,7 +14,7 @@ export default async function AuthLayout({
 	let account = null;
 
 	if (data?.user) {
-		const resp = await getAccount(data.user.id);
+		const resp = await getAccountByUserId(data.user.id);
 		account = resp.accounts[0];
 	}
 

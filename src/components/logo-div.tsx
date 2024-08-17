@@ -1,19 +1,17 @@
 import { ComponentPropsWithoutRef, FC } from "react";
-interface LogoDivProps extends ComponentPropsWithoutRef<"div"> { }
+import { cn } from "@/lib/utils";
 
-export const LogoDiv: FC<LogoDivProps> = ({ ...props }) => {
+interface LogoDivProps extends ComponentPropsWithoutRef<"h1"> { }
+
+export const LogoDiv: FC<LogoDivProps> = ({ className, ...props }) => {
   return (
-    <div {...props}>
-      <a className="flex flex-row items-baseline" href="/">
-        <h1 className="relative flex flex-row items-baseline text-2xl font-bold">
-          <span className="sr-only">BidDropper</span>
-          <span className="tracking-tight hover:cursor-pointer">
-            bid
-            <span className="text-primary">dropper</span>
-          </span>
-        </h1>
-      </a>
-    </div>
+    <h1 className={cn("relative flex flex-row items-baseline text-2xl font-bold", className)}>
+      <span className="sr-only">waitq</span>
+      <span className="tracking-tight hover:cursor-pointer">
+        wait
+        <span className="text-primary">q</span>
+      </span>
+    </h1>
   );
 };
 

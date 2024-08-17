@@ -16,6 +16,13 @@ const RedirectConfig = {
 			account: "/settings/account",
 			billing: "/settings/billing",
 		},
+		waitlist: {
+			create: "/waitlist/create",
+			index: "/waitlist/:id",
+			settings: "/waitlist/:id/settings",
+			edit: "/waitlist/:id/edit",
+			emails: "/waitlist/:id/emails",
+		},
 	},
 };
 

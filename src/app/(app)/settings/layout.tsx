@@ -1,6 +1,4 @@
-
-
-export default async function SettingsLayout({
+export default async function AccountSettingsLayout({
   children,
 }: {
   children: React.ReactNode;

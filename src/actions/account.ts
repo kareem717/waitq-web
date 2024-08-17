@@ -8,13 +8,14 @@ export async function createAccount(username: string, userId: string) {
 		const { accountsApi } = await API();
 
 		const response = await accountsApi.createAccount({
-			createInputBody: {
+			createAccountInputBody: {
 				account: {
 					userId,
 					username,
 				},
 			},
 		});
+
 		return response;
 	} catch (error) {
 		if (error instanceof ResponseError) {
@@ -38,7 +39,7 @@ export async function updateAccount(
 		// Backend already validates that the user is the owner of the account
 		const response = await accountsApi.updateAccount({
 			id,
-			updateInputBody: {
+			updateAccountInputBody: {
 				account: fields,
 			},
 		});
@@ -55,7 +56,7 @@ export async function updateAccount(
 	}
 }
 
-export async function getAccount(userId: string) {
+export async function getAccountByUserId(userId: string) {
 	try {
 		const { accountsApi } = await API();
 
