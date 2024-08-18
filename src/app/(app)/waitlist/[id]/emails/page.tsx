@@ -4,7 +4,7 @@ import { WaitlistEmailActions } from "@/components/app/waitlist/emails/email-act
 import { WaitlistAnalytics } from "@/components/app/waitlist/emails/waitlist-analytics";
 
 export default async function WaitlistEmailsPage({ params }: { params: { id: string } }) {
-  const resp = await getWaitlistAnalytics({ id: params.id })
+  const resp = await getWaitlistAnalytics({ waitlistId: params.id })
 
   if (!resp?.data) {
     throw new Error(resp?.serverError || "Something went wrong.");

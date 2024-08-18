@@ -7,12 +7,14 @@ import { Icons } from "@/components/icons"
 import { ModeToggle } from "@/components/app/mode-toggle"
 import { cn } from "@/lib/utils"
 import { LogoDiv } from "@/components/logo-div"
+import { Waitlist } from "@/lib/sdk"
 
 export interface MobileSidebarProps extends ComponentPropsWithoutRef<typeof Sheet> {
-  menuProps?: ComponentPropsWithoutRef<typeof Menu>
+  waitlists: Waitlist[]
+  accountId: string
 }
 
-export const MobileSidebar: FC<MobileSidebarProps> = ({ menuProps, ...props }) => {
+export const MobileSidebar: FC<MobileSidebarProps> = ({ waitlists, accountId, ...props }) => {
   return (
     <Sheet {...props}>
       <SheetTrigger asChild>
@@ -29,7 +31,7 @@ export const MobileSidebar: FC<MobileSidebarProps> = ({ menuProps, ...props }) =
         <SheetHeader className="px-2">
           <LogoDiv />
         </SheetHeader>
-        <Menu {...menuProps} className={cn("px-2", menuProps?.className)} />
+        <Menu waitlists={waitlists} accountId={accountId} className="px-2" />
         <ModeToggle className="mt-auto px-2 text-sm font-medium" />
       </SheetContent>
     </Sheet>

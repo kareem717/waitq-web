@@ -11,10 +11,7 @@ models/CreateAccountInputBody.ts
 models/CreateAccountOutputBody.ts
 models/CreateWaitlistFieldsStruct.ts
 models/CreateWaitlistInputBody.ts
-models/CreateWaitlistOutputBody.ts
 models/DeleteAccountOutputBody.ts
-models/DeleteEmailsOutputBody.ts
-models/DeleteWaitlistOutputBody.ts
 models/Email.ts
 models/EmailPaginationRequest.ts
 models/ErrorDetail.ts
@@ -27,7 +24,7 @@ models/GetUnsubscribedEmailJWTOutputBody.ts
 models/GetWaitlistAnalyticsOutputBody.ts
 models/GetWaitlistByAccountIDInputBody.ts
 models/GetWaitlistByAccountIDOutputBody.ts
-models/GetWaitlistByIDOutputBody.ts
+models/MessageOutputBody.ts
 models/PaginationRequest.ts
 models/ParsedEmail.ts
 models/UnsubscribeEmailInputBody.ts
@@ -35,15 +32,12 @@ models/UnsubscribeEmailOutputBody.ts
 models/UpdateAccountFieldsStruct.ts
 models/UpdateAccountInputBody.ts
 models/UpdateAccountOutputBody.ts
-models/UpdateEmailInputBody.ts
-models/UpdateEmailOutputBody.ts
 models/UpdateWaitlistFieldsStruct.ts
 models/UpdateWaitlistInputBody.ts
 models/UpdateWaitlistJWTSecretFieldsStruct.ts
 models/UpdateWaitlistJWTSecretInputBody.ts
-models/UpdateWaitlistJWTSecretOutputBody.ts
-models/UpdateWaitlistOutputBody.ts
 models/Waitlist.ts
 models/WaitlistAnalytics.ts
+models/WaitlistWithMessageBody.ts
 models/index.ts
 runtime.ts

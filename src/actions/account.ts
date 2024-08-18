@@ -1,6 +1,5 @@
 "use server";
 
-import API from "@/lib/sdk";
 import { actionClient } from "@/lib/safe-action";
 import { z } from "zod";
 
@@ -11,10 +10,8 @@ export const createAccount = actionClient
 			userId: z.string().uuid(),
 		})
 	)
-	.action(async ({ parsedInput: { username, userId } }) => {
-		const { accountsApi } = await API();
-
-		return await accountsApi.createAccount({
+	.action(async ({ parsedInput: { username, userId }, ctx: { apiClient } }) => {
+		return await apiClient.accountsApi.createAccount({
 			createAccountInputBody: {
 				account: {
 					userId,
@@ -33,11 +30,8 @@ export const updateAccount = actionClient
 			}),
 		})
 	)
-	.action(async ({ parsedInput: { id, fields } }) => {
-		const { accountsApi } = await API();
-
-		// Backend already validates that the user is the owner of the account
-		return await accountsApi.updateAccount({
+	.action(async ({ parsedInput: { id, fields }, ctx: { apiClient } }) => {
+		return await apiClient.accountsApi.updateAccount({
 			id,
 			updateAccountInputBody: {
 				account: fields,
@@ -47,10 +41,8 @@ export const updateAccount = actionClient
 
 export const getAccountByUserId = actionClient
 	.schema(z.object({ userId: z.string().uuid() }))
-	.action(async ({ parsedInput: { userId } }) => {
-		const { accountsApi } = await API();
-
-		return await accountsApi.getAccountsByUserId({
+	.action(async ({ parsedInput: { userId }, ctx: { apiClient } }) => {
+		return await apiClient.accountsApi.getAccountsByUserId({
 			userId,
 			includeDeleted: false,
 		});

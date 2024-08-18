@@ -27,10 +27,10 @@ export interface AddEmailsInputBody {
     readonly $schema?: string;
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof AddEmailsInputBody
      */
-    emails: Array<string>;
+    emails: string;
 }
 
 /**

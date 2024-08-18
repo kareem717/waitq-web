@@ -63,7 +63,7 @@ export const JoinWaitlistForm: FC<JoinWaitlistFormProps> = ({ className, onSucce
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await executeAsync({ id: waitlistId, email: values.email })
+    await executeAsync({ waitlistId, email: values.email })
   }
 
   return (

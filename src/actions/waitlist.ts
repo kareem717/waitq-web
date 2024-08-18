@@ -1,7 +1,6 @@
 "use server";
 
-import API from "@/lib/sdk";
-import { actionClient } from "@/lib/safe-action";
+import { actionClient, serviceWaitlistActionClient } from "@/lib/safe-action";
 import { z } from "zod";
 
 const paginationRequestSchema = z.object({
@@ -17,41 +16,47 @@ export const getWaitlistByAccountId = actionClient
 			paginationParams: paginationRequestSchema,
 		})
 	)
-	.action(async ({ parsedInput: { accountId, paginationParams } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.getWaitlistsByAccountId({
-			accountId,
-			getWaitlistByAccountIDInputBody: {
-				paginationParams,
-			},
-		});
-	});
-
-export const getWaitlistById = actionClient
-	.schema(z.object({ id: z.string().uuid() }))
-	.action(async ({ parsedInput: { id } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.getWaitlistById({
-			id,
-		});
-	});
-
-export const genNewJWT = actionClient
-	.schema(z.object({ id: z.string().uuid(), jwtSecret: z.string().optional() }))
-	.action(async ({ parsedInput: { id, jwtSecret } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.generateNewWaitlistJwtSecret({
-			id,
-			updateWaitlistJWTSecretInputBody: {
-				waitlist: {
-					jwtSecret,
+	.action(
+		async ({
+			parsedInput: { accountId, paginationParams },
+			ctx: { apiClient },
+		}) => {
+			return await apiClient.waitlistsApi.getWaitlistsByAccountId({
+				accountId,
+				getWaitlistByAccountIDInputBody: {
+					paginationParams,
 				},
-			},
+			});
+		}
+	);
+
+export const getWaitlistById = serviceWaitlistActionClient
+	.schema(z.object({ waitlistId: z.string().uuid() }))
+	.action(async ({ parsedInput: { waitlistId }, ctx: { apiClient } }) => {
+		return await apiClient.waitlistsApi.getWaitlistById({
+			id: waitlistId,
 		});
 	});
+
+export const genNewJWT = serviceWaitlistActionClient
+	.schema(
+		z.object({
+			waitlistId: z.string().uuid(),
+			jwtSecret: z.string().optional(),
+		})
+	)
+	.action(
+		async ({ parsedInput: { waitlistId, jwtSecret }, ctx: { apiClient } }) => {
+			return await apiClient.waitlistsApi.generateNewWaitlistJwtSecret({
+				id: waitlistId,
+				updateWaitlistJWTSecretInputBody: {
+					waitlist: {
+						jwtSecret,
+					},
+				},
+			});
+		}
+	);
 
 export const createWaitlist = actionClient
 	.schema(
@@ -62,88 +67,83 @@ export const createWaitlist = actionClient
 			}),
 		})
 	)
-	.action(async ({ parsedInput: { waitlist } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.createWaitlist({
+	.action(async ({ parsedInput: { waitlist }, ctx: { apiClient } }) => {
+		return await apiClient.waitlistsApi.createWaitlist({
 			createWaitlistInputBody: {
 				waitlist,
 			},
 		});
 	});
 
-export const updateWaitlist = actionClient
+export const updateWaitlist = serviceWaitlistActionClient
 	.schema(
 		z.object({
-			id: z.string().uuid(),
+			waitlistId: z.string().uuid(),
 			waitlist: z.object({
 				name: z.string(),
 			}),
 		})
 	)
-	.action(async ({ parsedInput: { id, waitlist } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.updateWaitlist({
-			id,
-			updateWaitlistInputBody: {
-				waitlist,
-			},
-		});
-	});
+	.action(
+		async ({ parsedInput: { waitlistId, waitlist }, ctx: { apiClient } }) => {
+			return await apiClient.waitlistsApi.updateWaitlist({
+				id: waitlistId,
+				updateWaitlistInputBody: {
+					waitlist,
+				},
+			});
+		}
+	);
 
 export const joinWaitlist = actionClient
-	.schema(z.object({ id: z.string().uuid(), email: z.string() }))
-	.action(async ({ parsedInput: { id, email } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.addEmailsToWaitlist({
-			id,
-			addEmailsInputBody: {
-				emails: [email],
-			},
-		});
-	});
+	.schema(z.object({ waitlistId: z.string().uuid(), email: z.string() }))
+	.action(
+		async ({ parsedInput: { waitlistId, email }, ctx: { apiClient } }) => {
+			return await apiClient.waitlistsApi.addEmailsToWaitlist({
+				id: waitlistId,
+				addEmailsInputBody: {
+					emails: email,
+				},
+			});
+		}
+	);
 
 export const leaveWaitlist = actionClient
-	.schema(z.object({ id: z.string().uuid(), encodedEmail: z.string() }))
-	.action(async ({ parsedInput: { id, encodedEmail } }) => {
-		const { waitlistsApi } = await API();
+	.schema(z.object({ waitlistId: z.string().uuid(), encodedEmail: z.string() }))
+	.action(
+		async ({
+			parsedInput: { waitlistId, encodedEmail },
+			ctx: { apiClient },
+		}) => {
+			return await apiClient.waitlistsApi.unsubscribeFromWaitlist({
+				id: waitlistId,
+				unsubscribeEmailInputBody: {
+					encodedEmail,
+				},
+			});
+		}
+	);
 
-		return await waitlistsApi.unsubscribeFromWaitlist({
-			id,
-			unsubscribeEmailInputBody: {
-				encodedEmail,
-			},
+export const getWaitlistAnalytics = serviceWaitlistActionClient
+	.schema(z.object({ waitlistId: z.string().uuid() }))
+	.action(async ({ parsedInput: { waitlistId }, ctx: { apiClient } }) => {
+		return await apiClient.waitlistsApi.getWaitlistAnalytics({
+			id: waitlistId,
 		});
 	});
 
-export const getWaitlistAnalytics = actionClient
-	.schema(z.object({ id: z.string().uuid() }))
-	.action(async ({ parsedInput: { id } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.getWaitlistAnalytics({
-			id,
+export const exportEmailsToCSV = serviceWaitlistActionClient
+	.schema(z.object({ waitlistId: z.string().uuid() }))
+	.action(async ({ parsedInput: { waitlistId }, ctx: { apiClient } }) => {
+		return await apiClient.waitlistsApi.exportWaitlistEmailsToCsv({
+			id: waitlistId,
 		});
 	});
 
-export const exportEmailsToCSV = actionClient
-	.schema(z.object({ id: z.string().uuid() }))
-	.action(async ({ parsedInput: { id } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.exportWaitlistEmailsToCsv({
-			id,
-		});
-	});
-
-export const deleteWaitlist = actionClient
-	.schema(z.object({ id: z.string().uuid() }))
-	.action(async ({ parsedInput: { id } }) => {
-		const { waitlistsApi } = await API();
-
-		return await waitlistsApi.deleteWaitlist({
-			id,
+export const deleteWaitlist = serviceWaitlistActionClient
+	.schema(z.object({ waitlistId: z.string().uuid() }))
+	.action(async ({ parsedInput: { waitlistId }, ctx: { apiClient } }) => {
+		return await apiClient.waitlistsApi.deleteWaitlist({
+			id: waitlistId,
 		});
 	});

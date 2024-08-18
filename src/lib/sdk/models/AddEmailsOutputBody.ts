@@ -34,16 +34,10 @@ export interface AddEmailsOutputBody {
     readonly $schema?: string;
     /**
      * 
-     * @type {number}
+     * @type {Email}
      * @memberof AddEmailsOutputBody
      */
-    count: number;
-    /**
-     * 
-     * @type {Array<Email>}
-     * @memberof AddEmailsOutputBody
-     */
-    emailsAdded: Array<Email>;
+    emailAdded: Email;
     /**
      * 
      * @type {string}
@@ -56,8 +50,7 @@ export interface AddEmailsOutputBody {
  * Check if a given object implements the AddEmailsOutputBody interface.
  */
 export function instanceOfAddEmailsOutputBody(value: object): value is AddEmailsOutputBody {
-    if (!('count' in value) || value['count'] === undefined) return false;
-    if (!('emailsAdded' in value) || value['emailsAdded'] === undefined) return false;
+    if (!('emailAdded' in value) || value['emailAdded'] === undefined) return false;
     if (!('message' in value) || value['message'] === undefined) return false;
     return true;
 }
@@ -73,8 +66,7 @@ export function AddEmailsOutputBodyFromJSONTyped(json: any, ignoreDiscriminator:
     return {
         
         '$schema': json['$schema'] == null ? undefined : json['$schema'],
-        'count': json['count'],
-        'emailsAdded': ((json['emailsAdded'] as Array<any>).map(EmailFromJSON)),
+        'emailAdded': EmailFromJSON(json['emailAdded']),
         'message': json['message'],
     };
 }
@@ -85,8 +77,7 @@ export function AddEmailsOutputBodyToJSON(value?: Omit<AddEmailsOutputBody, '$sc
     }
     return {
         
-        'count': value['count'],
-        'emailsAdded': ((value['emailsAdded'] as Array<any>).map(EmailToJSON)),
+        'emailAdded': EmailToJSON(value['emailAdded']),
         'message': value['message'],
     };
 }

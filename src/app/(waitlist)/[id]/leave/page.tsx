@@ -10,7 +10,7 @@ import {
 import { notFound } from "next/navigation";
 
 export default async function UnsubscribePage({ params, searchParams }: { params: { id: string }, searchParams: { ee: string } }) {
-  const resp = await getWaitlistById({ id: params.id })
+  const resp = await getWaitlistById({ waitlistId: params.id })
 
   if (!resp?.data) {
     if (resp?.serverError) {

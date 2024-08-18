@@ -19,7 +19,7 @@ export const WaitlistEmailActions: FC<WaitlistEmailActionsProps> = ({ waitlistId
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleExportToCSV = async () => {
-    const resp = await exportEmailsToCSV({ id: waitlistId })
+    const resp = await exportEmailsToCSV({ waitlistId })
     if (resp?.data) {
       const blob = new Blob([resp.data], { type: 'text/csv;charset=utf-8;' });
       saveAs(blob, `${waitlistId}-${new Date().toISOString()}.csv`);

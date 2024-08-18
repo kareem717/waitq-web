@@ -3,12 +3,14 @@ import { cn } from "@/lib/utils"
 import { Menu } from "./menu"
 import { ModeToggle } from "@/components/app/mode-toggle"
 import { LogoDiv } from "@/components/logo-div"
+import { Waitlist } from "@/lib/sdk"
 
 export interface SidebarProps extends ComponentPropsWithoutRef<"div"> {
-  menuProps?: ComponentPropsWithoutRef<typeof Menu>
+  waitlists: Waitlist[]
+  accountId: string
 }
 
-export const Sidebar: FC<SidebarProps> = ({ className, menuProps, ...props }) => {
+export const Sidebar: FC<SidebarProps> = ({ className, waitlists, accountId, ...props }) => {
   return (
     <div className={cn("hidden border-r bg-muted/40 md:block", className)} {...props}>
       <div className="flex h-full max-h-screen flex-col gap-2">
@@ -16,7 +18,7 @@ export const Sidebar: FC<SidebarProps> = ({ className, menuProps, ...props }) =>
           <LogoDiv />
         </div>
         <div className="flex-1">
-          <Menu {...menuProps} />
+          <Menu waitlists={waitlists} accountId={accountId} />
         </div>
         <ModeToggle className="px-2 lg:px-4 mt-auto mb-4" />
       </div>

@@ -4,7 +4,7 @@ import { getWaitlistById } from "@/actions/waitlist"
 import { DeleteWaitlistCard } from "@/components/app/waitlist/settings/delete-waitlist"
 
 export default async function WaitlistSettings({ params }: { params: { id: string } }) {
-  const resp = await getWaitlistById({ id: params.id })
+  const resp = await getWaitlistById({ waitlistId: params.id })
 
   if (!resp?.data) {
     throw new Error(resp?.serverError || "Something went wrong.");
@@ -18,7 +18,7 @@ export default async function WaitlistSettings({ params }: { params: { id: strin
       <main className="flex flex-col gap-10 md:gap-16 items-center justify-center w-full">
         <WaitlistAPIKeyDisplay waitlist={waitlist} />
         <WaitlistJWTDisplay waitlist={waitlist} />
-        <DeleteWaitlistCard waitlist={waitlist} />
+        <DeleteWaitlistCard waitlistId={waitlist.id} />
       </main>
     </div>
   )

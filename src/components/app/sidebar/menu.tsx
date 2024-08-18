@@ -34,28 +34,15 @@ type Group = {
 }
 
 //TODO: Clean up this code
-const getMenuList = async (pathname: string, accountId: string) => {
+const getMenuList = (pathname: string, accountId: string, waitlists: Waitlist[]) => {
   const processSubmenus = (submenus: SubmenuType[], pathname: string) =>
     submenus.map(submenu => ({
       ...submenu,
       active: pathname === submenu.pathIdentifier,
     }));
 
-  const processWaitlists = async (accountId: string, pathname: string): Promise<SidebarMenu[]> => {
-    const resp = await getWaitlistByAccountId({
-      accountId,
-      paginationParams: {
-        page: 1,
-        pageSize: 999,
-        includeDeleted: false,
-      }
-    });
-
-    if (!resp?.data) {
-      throw new Error(resp?.serverError || "Something went wrong")
-    }
-
-    return resp.data.waitlists.flatMap(waitlist => {
+  const processWaitlists = (accountId: string, pathname: string): SidebarMenu[] => {
+    return waitlists.flatMap(waitlist => {
       const index = redirects.app.waitlist.index.replace(":id", waitlist.id);
       const settings = redirects.app.waitlist.settings.replace(":id", waitlist.id);
       const edit = redirects.app.waitlist.edit.replace(":id", waitlist.id);
@@ -92,8 +79,8 @@ const getMenuList = async (pathname: string, accountId: string) => {
     });
   };
 
-  const processMenus = async (group: Group, pathname: string, accountId: string) => {
-    const menus = await Promise.all(group.menus.map(async menu => {
+  const processMenus = (group: Group, pathname: string, accountId: string) => {
+    const menus = group.menus.map(menu => {
       const submenus = processSubmenus(menu.submenus, pathname);
 
       return {
@@ -101,10 +88,10 @@ const getMenuList = async (pathname: string, accountId: string) => {
         active: pathname === menu.pathIdentifier, // Add active property
         submenus,
       };
-    }));
+    });
 
     if (group.groupLabel === "Waitlists") {
-      const waitlistMenus = await processWaitlists(accountId, pathname);
+      const waitlistMenus = processWaitlists(accountId, pathname);
       return {
         ...group,
         menus: [...menus, ...waitlistMenus],
@@ -117,47 +104,29 @@ const getMenuList = async (pathname: string, accountId: string) => {
     };
   };
 
-  const menuList = await Promise.all(
-    NavigationConfig.map(group => processMenus({
-      ...group,
-      menus: group.menus.map(menu => ({
-        ...menu,
+  const menuList = NavigationConfig.map(group => processMenus({
+    ...group,
+    menus: group.menus.map(menu => ({
+      ...menu,
+      active: false, // Initialize active property
+      submenus: menu.submenus.map(submenu => ({
+        ...submenu,
         active: false, // Initialize active property
-        submenus: menu.submenus.map(submenu => ({
-          ...submenu,
-          active: false, // Initialize active property
-        }))
       }))
-    }, pathname, accountId))
-  );
+    }))
+  }, pathname, accountId))
 
   return menuList;
 };
 
 export interface MenuProps extends ComponentPropsWithoutRef<"nav"> {
+  waitlists: Waitlist[];
+  accountId: string;
 }
 
-export const Menu: FC<MenuProps> = ({ className, ...props }) => {
-  const { account } = useAuth();
+export const Menu: FC<MenuProps> = ({ className, waitlists, accountId, ...props }) => {
   const pathname = usePathname();
-  const [menuList, setMenuList] = useState<Group[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(false);
-
-  if (!account) throw new Error("Account not found");
-
-  useEffect(() => {
-    const fetchMenuList = async () => {
-      const menuList = await getMenuList(pathname, account.id)
-      setMenuList(menuList)
-      setIsLoading(false)
-      setHasMore(menuList.length > 3)
-    }
-
-    fetchMenuList()
-  }, [account, pathname])
-
-  if (isLoading) return <div>Loading...</div>
+  const menuList = getMenuList(pathname, accountId, waitlists)
 
   return (
     <nav className={cn("grid items-start px-2 text-sm font-medium lg:px-4", className)} {...props}>

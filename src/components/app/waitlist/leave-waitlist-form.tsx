@@ -53,7 +53,7 @@ export const LeaveWaitlistForm: FC<LeaveWaitlistFormProps> = ({ className, onSuc
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await executeAsync({ id: waitlistId, encodedEmail: values.encodedEmail })
+    await executeAsync({ waitlistId, encodedEmail: values.encodedEmail })
   }
 
   return (

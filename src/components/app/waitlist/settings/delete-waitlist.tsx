@@ -26,10 +26,10 @@ import { useAction } from "next-safe-action/hooks"
 import { deleteWaitlist } from "@/actions/waitlist"
 
 export interface DeleteWaitlistCardProps extends ComponentPropsWithoutRef<typeof Card> {
-  waitlist: Waitlist
+  waitlistId: string
 }
 
-export const DeleteWaitlistCard: FC<DeleteWaitlistCardProps> = ({ waitlist, ...props }) => {
+export const DeleteWaitlistCard: FC<DeleteWaitlistCardProps> = ({ waitlistId, ...props }) => {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const { executeAsync } = useAction(deleteWaitlist, {
@@ -52,7 +52,7 @@ export const DeleteWaitlistCard: FC<DeleteWaitlistCardProps> = ({ waitlist, ...p
   })
 
   const handleDeleteWaitlist = async () => {
-    await executeAsync({ id: waitlist.id })
+    await executeAsync({ waitlistId })
   }
 
   return (

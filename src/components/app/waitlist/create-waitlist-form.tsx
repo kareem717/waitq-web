@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { createWaitlist } from "@/actions/waitlist";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useAction } from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
 
 export interface CreateWaitlistFormProps extends ComponentPropsWithoutRef<'form'> {
   onSuccess?: () => void
@@ -35,7 +36,7 @@ const formSchema = z.object({
 export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onSuccess, ...props }) => {
   const [isCreating, setIsCreating] = useState(false)
   const { account } = useAuth()
-
+  const router = useRouter()
   if (!account) throw Error("Account not found")
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,6 +53,7 @@ export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onS
       toast.success("Done!", {
         description: "Your waitlist has been created.",
       })
+      router.refresh()
     },
     onError: ({ error }) => {
       toast.error("Something went wrong", {

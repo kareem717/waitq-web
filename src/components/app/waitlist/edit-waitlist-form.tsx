@@ -70,7 +70,7 @@ export const EditWaitlistForm: FC<EditWaitlistFormProps> = ({ className, onSucce
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await executeAsync({ id: waitlist.id, waitlist: values })
+    await executeAsync({ waitlistId: waitlist.id, waitlist: values })
   }
 
   return (

@@ -16,36 +16,36 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface DeleteEmailsOutputBody
+ * @interface MessageOutputBody
  */
-export interface DeleteEmailsOutputBody {
+export interface MessageOutputBody {
     /**
      * A URL to the JSON Schema for this object.
      * @type {string}
-     * @memberof DeleteEmailsOutputBody
+     * @memberof MessageOutputBody
      */
     readonly $schema?: string;
     /**
      * 
      * @type {string}
-     * @memberof DeleteEmailsOutputBody
+     * @memberof MessageOutputBody
      */
     message: string;
 }
 
 /**
- * Check if a given object implements the DeleteEmailsOutputBody interface.
+ * Check if a given object implements the MessageOutputBody interface.
  */
-export function instanceOfDeleteEmailsOutputBody(value: object): value is DeleteEmailsOutputBody {
+export function instanceOfMessageOutputBody(value: object): value is MessageOutputBody {
     if (!('message' in value) || value['message'] === undefined) return false;
     return true;
 }
 
-export function DeleteEmailsOutputBodyFromJSON(json: any): DeleteEmailsOutputBody {
-    return DeleteEmailsOutputBodyFromJSONTyped(json, false);
+export function MessageOutputBodyFromJSON(json: any): MessageOutputBody {
+    return MessageOutputBodyFromJSONTyped(json, false);
 }
 
-export function DeleteEmailsOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): DeleteEmailsOutputBody {
+export function MessageOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): MessageOutputBody {
     if (json == null) {
         return json;
     }
@@ -56,7 +56,7 @@ export function DeleteEmailsOutputBodyFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function DeleteEmailsOutputBodyToJSON(value?: Omit<DeleteEmailsOutputBody, '$schema'> | null): any {
+export function MessageOutputBodyToJSON(value?: Omit<MessageOutputBody, '$schema'> | null): any {
     if (value == null) {
         return value;
     }

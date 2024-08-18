@@ -23,43 +23,43 @@ import {
 /**
  * 
  * @export
- * @interface UpdateWaitlistOutputBody
+ * @interface WaitlistWithMessageBody
  */
-export interface UpdateWaitlistOutputBody {
+export interface WaitlistWithMessageBody {
     /**
      * A URL to the JSON Schema for this object.
      * @type {string}
-     * @memberof UpdateWaitlistOutputBody
+     * @memberof WaitlistWithMessageBody
      */
     readonly $schema?: string;
     /**
      * 
      * @type {string}
-     * @memberof UpdateWaitlistOutputBody
+     * @memberof WaitlistWithMessageBody
      */
     message: string;
     /**
      * 
      * @type {Waitlist}
-     * @memberof UpdateWaitlistOutputBody
+     * @memberof WaitlistWithMessageBody
      */
     waitlist: Waitlist;
 }
 
 /**
- * Check if a given object implements the UpdateWaitlistOutputBody interface.
+ * Check if a given object implements the WaitlistWithMessageBody interface.
  */
-export function instanceOfUpdateWaitlistOutputBody(value: object): value is UpdateWaitlistOutputBody {
+export function instanceOfWaitlistWithMessageBody(value: object): value is WaitlistWithMessageBody {
     if (!('message' in value) || value['message'] === undefined) return false;
     if (!('waitlist' in value) || value['waitlist'] === undefined) return false;
     return true;
 }
 
-export function UpdateWaitlistOutputBodyFromJSON(json: any): UpdateWaitlistOutputBody {
-    return UpdateWaitlistOutputBodyFromJSONTyped(json, false);
+export function WaitlistWithMessageBodyFromJSON(json: any): WaitlistWithMessageBody {
+    return WaitlistWithMessageBodyFromJSONTyped(json, false);
 }
 
-export function UpdateWaitlistOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): UpdateWaitlistOutputBody {
+export function WaitlistWithMessageBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): WaitlistWithMessageBody {
     if (json == null) {
         return json;
     }
@@ -71,7 +71,7 @@ export function UpdateWaitlistOutputBodyFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function UpdateWaitlistOutputBodyToJSON(value?: Omit<UpdateWaitlistOutputBody, '$schema'> | null): any {
+export function WaitlistWithMessageBodyToJSON(value?: Omit<WaitlistWithMessageBody, '$schema'> | null): any {
     if (value == null) {
         return value;
     }

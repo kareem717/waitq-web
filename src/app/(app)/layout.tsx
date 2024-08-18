@@ -8,6 +8,7 @@ import { getAccountByUserId } from "@/actions/account";
 import { redirect } from "next/navigation";
 import redirects from "@/config/redirects";
 import { Account } from "@/lib/sdk";
+import { getWaitlistByAccountId } from "@/actions/waitlist";
 
 export default async function AppLayout({
   children,
@@ -35,12 +36,27 @@ export default async function AppLayout({
     redirect(redirects.auth.login);
   }
 
+  const resp = await getWaitlistByAccountId({
+    accountId: account?.id,
+    paginationParams: {
+      page: 1,
+      pageSize: 100,
+      includeDeleted: false
+    },
+  });
+
+  const waitlists = resp?.data?.waitlists;
+
+  if (waitlists === undefined) {
+    throw new Error(resp?.serverError || "Something went wrong.");
+  }
+
   return (
     <AuthProvider user={data?.user} account={account}>
       <div className="relative grid w-full h-full grid-rows-[auto_1fr] md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
-        <Sidebar className="row-span-full" />
+        <Sidebar className="row-span-full" waitlists={waitlists} accountId={account.id} />
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-          <MobileSidebar />
+          <MobileSidebar waitlists={waitlists} accountId={account.id} />
           <div className="w-full flex-1">
             <form>
               <div className="relative">

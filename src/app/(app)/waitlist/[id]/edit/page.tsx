@@ -9,7 +9,7 @@ import {
 import { getWaitlistById } from "@/actions/waitlist"
 
 export default async function UpdateWaitlistPage({ params }: { params: { id: string } }) {
-  const resp = await getWaitlistById({ id: params.id })
+  const resp = await getWaitlistById({ waitlistId: params.id })
 
   const waitlist = resp?.data?.waitlist
 

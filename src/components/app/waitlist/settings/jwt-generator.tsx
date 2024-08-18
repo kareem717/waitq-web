@@ -81,7 +81,7 @@ export const WaitlistJWTGenerator: FC<WaitlistJWTGeneratorProps> = ({ waitlist, 
   })
 
   const handleGenerateSecret = async (secret?: string) => {
-    await executeAsync({ id: waitlist.id, jwtSecret: secret })
+    await executeAsync({ waitlistId: waitlist.id, jwtSecret: secret })
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {

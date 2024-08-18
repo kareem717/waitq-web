@@ -18,9 +18,6 @@ import type {
   AddEmailsInputBody,
   AddEmailsOutputBody,
   CreateWaitlistInputBody,
-  CreateWaitlistOutputBody,
-  DeleteEmailsOutputBody,
-  DeleteWaitlistOutputBody,
   ErrorModel,
   GetEmailsByWaitlistIDInputBody,
   GetEmailsByWaitlistIDOutputBody,
@@ -28,15 +25,12 @@ import type {
   GetWaitlistAnalyticsOutputBody,
   GetWaitlistByAccountIDInputBody,
   GetWaitlistByAccountIDOutputBody,
-  GetWaitlistByIDOutputBody,
+  MessageOutputBody,
   UnsubscribeEmailInputBody,
   UnsubscribeEmailOutputBody,
-  UpdateEmailInputBody,
-  UpdateEmailOutputBody,
   UpdateWaitlistInputBody,
   UpdateWaitlistJWTSecretInputBody,
-  UpdateWaitlistJWTSecretOutputBody,
-  UpdateWaitlistOutputBody,
+  WaitlistWithMessageBody,
 } from '../models/index';
 import {
     AddEmailsInputBodyFromJSON,
@@ -45,12 +39,6 @@ import {
     AddEmailsOutputBodyToJSON,
     CreateWaitlistInputBodyFromJSON,
     CreateWaitlistInputBodyToJSON,
-    CreateWaitlistOutputBodyFromJSON,
-    CreateWaitlistOutputBodyToJSON,
-    DeleteEmailsOutputBodyFromJSON,
-    DeleteEmailsOutputBodyToJSON,
-    DeleteWaitlistOutputBodyFromJSON,
-    DeleteWaitlistOutputBodyToJSON,
     ErrorModelFromJSON,
     ErrorModelToJSON,
     GetEmailsByWaitlistIDInputBodyFromJSON,
@@ -65,24 +53,18 @@ import {
     GetWaitlistByAccountIDInputBodyToJSON,
     GetWaitlistByAccountIDOutputBodyFromJSON,
     GetWaitlistByAccountIDOutputBodyToJSON,
-    GetWaitlistByIDOutputBodyFromJSON,
-    GetWaitlistByIDOutputBodyToJSON,
+    MessageOutputBodyFromJSON,
+    MessageOutputBodyToJSON,
     UnsubscribeEmailInputBodyFromJSON,
     UnsubscribeEmailInputBodyToJSON,
     UnsubscribeEmailOutputBodyFromJSON,
     UnsubscribeEmailOutputBodyToJSON,
-    UpdateEmailInputBodyFromJSON,
-    UpdateEmailInputBodyToJSON,
-    UpdateEmailOutputBodyFromJSON,
-    UpdateEmailOutputBodyToJSON,
     UpdateWaitlistInputBodyFromJSON,
     UpdateWaitlistInputBodyToJSON,
     UpdateWaitlistJWTSecretInputBodyFromJSON,
     UpdateWaitlistJWTSecretInputBodyToJSON,
-    UpdateWaitlistJWTSecretOutputBodyFromJSON,
-    UpdateWaitlistJWTSecretOutputBodyToJSON,
-    UpdateWaitlistOutputBodyFromJSON,
-    UpdateWaitlistOutputBodyToJSON,
+    WaitlistWithMessageBodyFromJSON,
+    WaitlistWithMessageBodyToJSON,
 } from '../models/index';
 
 export interface AddEmailsToWaitlistRequest {
@@ -126,6 +108,10 @@ export interface GetWaitlistAnalyticsRequest {
     id: string;
 }
 
+export interface GetWaitlistApiKeyByIdRequest {
+    id: string;
+}
+
 export interface GetWaitlistByIdRequest {
     id: string;
 }
@@ -138,11 +124,6 @@ export interface GetWaitlistsByAccountIdRequest {
 export interface UnsubscribeFromWaitlistRequest {
     id: string;
     unsubscribeEmailInputBody: Omit<UnsubscribeEmailInputBody, '$schema'>;
-}
-
-export interface UpdateEmailFromWaitlistRequest {
-    id: string;
-    updateEmailInputBody: Omit<UpdateEmailInputBody, '$schema'>;
 }
 
 export interface UpdateWaitlistRequest {
@@ -212,7 +193,7 @@ export class WaitlistsApi extends runtime.BaseAPI {
      * Create a waitlist.
      * Create a waitlist
      */
-    async createWaitlistRaw(requestParameters: CreateWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateWaitlistOutputBody>> {
+    async createWaitlistRaw(requestParameters: CreateWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WaitlistWithMessageBody>> {
         if (requestParameters['createWaitlistInputBody'] == null) {
             throw new runtime.RequiredError(
                 'createWaitlistInputBody',
@@ -242,14 +223,14 @@ export class WaitlistsApi extends runtime.BaseAPI {
             body: CreateWaitlistInputBodyToJSON(requestParameters['createWaitlistInputBody']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CreateWaitlistOutputBodyFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => WaitlistWithMessageBodyFromJSON(jsonValue));
     }
 
     /**
      * Create a waitlist.
      * Create a waitlist
      */
-    async createWaitlist(requestParameters: CreateWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateWaitlistOutputBody> {
+    async createWaitlist(requestParameters: CreateWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WaitlistWithMessageBody> {
         const response = await this.createWaitlistRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -258,7 +239,7 @@ export class WaitlistsApi extends runtime.BaseAPI {
      * Delete email from a waitlist.
      * Delete email from a waitlist
      */
-    async deleteEmailFromWaitlistRaw(requestParameters: DeleteEmailFromWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DeleteEmailsOutputBody>> {
+    async deleteEmailFromWaitlistRaw(requestParameters: DeleteEmailFromWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MessageOutputBody>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -289,14 +270,14 @@ export class WaitlistsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => DeleteEmailsOutputBodyFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => MessageOutputBodyFromJSON(jsonValue));
     }
 
     /**
      * Delete email from a waitlist.
      * Delete email from a waitlist
      */
-    async deleteEmailFromWaitlist(requestParameters: DeleteEmailFromWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DeleteEmailsOutputBody> {
+    async deleteEmailFromWaitlist(requestParameters: DeleteEmailFromWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MessageOutputBody> {
         const response = await this.deleteEmailFromWaitlistRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -305,7 +286,7 @@ export class WaitlistsApi extends runtime.BaseAPI {
      * Delete a waitlist.
      * Delete a waitlist
      */
-    async deleteWaitlistRaw(requestParameters: DeleteWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DeleteWaitlistOutputBody>> {
+    async deleteWaitlistRaw(requestParameters: DeleteWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MessageOutputBody>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -332,14 +313,14 @@ export class WaitlistsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => DeleteWaitlistOutputBodyFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => MessageOutputBodyFromJSON(jsonValue));
     }
 
     /**
      * Delete a waitlist.
      * Delete a waitlist
      */
-    async deleteWaitlist(requestParameters: DeleteWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DeleteWaitlistOutputBody> {
+    async deleteWaitlist(requestParameters: DeleteWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MessageOutputBody> {
         const response = await this.deleteWaitlistRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -395,7 +376,7 @@ export class WaitlistsApi extends runtime.BaseAPI {
      * Generate a new waitlist JWT secret.
      * Generate a new waitlist JWT secret
      */
-    async generateNewWaitlistJwtSecretRaw(requestParameters: GenerateNewWaitlistJwtSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateWaitlistJWTSecretOutputBody>> {
+    async generateNewWaitlistJwtSecretRaw(requestParameters: GenerateNewWaitlistJwtSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WaitlistWithMessageBody>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -432,14 +413,14 @@ export class WaitlistsApi extends runtime.BaseAPI {
             body: UpdateWaitlistJWTSecretInputBodyToJSON(requestParameters['updateWaitlistJWTSecretInputBody']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UpdateWaitlistJWTSecretOutputBodyFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => WaitlistWithMessageBodyFromJSON(jsonValue));
     }
 
     /**
      * Generate a new waitlist JWT secret.
      * Generate a new waitlist JWT secret
      */
-    async generateNewWaitlistJwtSecret(requestParameters: GenerateNewWaitlistJwtSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateWaitlistJWTSecretOutputBody> {
+    async generateNewWaitlistJwtSecret(requestParameters: GenerateNewWaitlistJwtSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WaitlistWithMessageBody> {
         const response = await this.generateNewWaitlistJwtSecretRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -588,10 +569,53 @@ export class WaitlistsApi extends runtime.BaseAPI {
     }
 
     /**
+     * Get a waitlist API key by ID.
+     * Get a waitlist API key by ID
+     */
+    async getWaitlistApiKeyByIdRaw(requestParameters: GetWaitlistApiKeyByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WaitlistWithMessageBody>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling getWaitlistApiKeyById().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/waitlists/{id}/api`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => WaitlistWithMessageBodyFromJSON(jsonValue));
+    }
+
+    /**
+     * Get a waitlist API key by ID.
+     * Get a waitlist API key by ID
+     */
+    async getWaitlistApiKeyById(requestParameters: GetWaitlistApiKeyByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WaitlistWithMessageBody> {
+        const response = await this.getWaitlistApiKeyByIdRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Get a waitlist by ID.
      * Get a waitlist by ID
      */
-    async getWaitlistByIdRaw(requestParameters: GetWaitlistByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetWaitlistByIDOutputBody>> {
+    async getWaitlistByIdRaw(requestParameters: GetWaitlistByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WaitlistWithMessageBody>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -618,14 +642,14 @@ export class WaitlistsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetWaitlistByIDOutputBodyFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => WaitlistWithMessageBodyFromJSON(jsonValue));
     }
 
     /**
      * Get a waitlist by ID.
      * Get a waitlist by ID
      */
-    async getWaitlistById(requestParameters: GetWaitlistByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetWaitlistByIDOutputBody> {
+    async getWaitlistById(requestParameters: GetWaitlistByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WaitlistWithMessageBody> {
         const response = await this.getWaitlistByIdRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -729,63 +753,10 @@ export class WaitlistsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Update email from a waitlist.
-     * Update email from a waitlist
-     */
-    async updateEmailFromWaitlistRaw(requestParameters: UpdateEmailFromWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateEmailOutputBody>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling updateEmailFromWaitlist().'
-            );
-        }
-
-        if (requestParameters['updateEmailInputBody'] == null) {
-            throw new runtime.RequiredError(
-                'updateEmailInputBody',
-                'Required parameter "updateEmailInputBody" was null or undefined when calling updateEmailFromWaitlist().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/waitlists/{id}/emails`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: UpdateEmailInputBodyToJSON(requestParameters['updateEmailInputBody']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => UpdateEmailOutputBodyFromJSON(jsonValue));
-    }
-
-    /**
-     * Update email from a waitlist.
-     * Update email from a waitlist
-     */
-    async updateEmailFromWaitlist(requestParameters: UpdateEmailFromWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateEmailOutputBody> {
-        const response = await this.updateEmailFromWaitlistRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
      * Update a waitlist.
      * Update a waitlist
      */
-    async updateWaitlistRaw(requestParameters: UpdateWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateWaitlistOutputBody>> {
+    async updateWaitlistRaw(requestParameters: UpdateWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WaitlistWithMessageBody>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -822,14 +793,14 @@ export class WaitlistsApi extends runtime.BaseAPI {
             body: UpdateWaitlistInputBodyToJSON(requestParameters['updateWaitlistInputBody']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UpdateWaitlistOutputBodyFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => WaitlistWithMessageBodyFromJSON(jsonValue));
     }
 
     /**
      * Update a waitlist.
      * Update a waitlist
      */
-    async updateWaitlist(requestParameters: UpdateWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateWaitlistOutputBody> {
+    async updateWaitlist(requestParameters: UpdateWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WaitlistWithMessageBody> {
         const response = await this.updateWaitlistRaw(requestParameters, initOverrides);
         return await response.value();
     }
