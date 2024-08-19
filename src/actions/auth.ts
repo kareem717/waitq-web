@@ -49,8 +49,8 @@ export const getAccountByUserId = actionClient
 	});
 
 export const getLoggedInAccount = actionClient.action(
-	async ({ ctx: { apiClient, session } }) => {
-		const userId = session?.user?.id;
+	async ({ ctx: { apiClient, user } }) => {
+		const userId = user?.id;
 
 		if (!userId) {
 			return null;
@@ -63,6 +63,6 @@ export const getLoggedInAccount = actionClient.action(
 	}
 );
 
-export const getSession = actionClient.action(async ({ ctx: { session } }) => {
-	return session;
+export const getUser = actionClient.action(async ({ ctx: { user } }) => {
+	return user;
 });

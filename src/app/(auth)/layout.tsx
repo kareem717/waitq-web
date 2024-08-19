@@ -1,23 +1,23 @@
 import { LogoDiv } from "@/components/logo-div";
 import AuthProvider from "@/components/providers/auth-provider";
-import { getSession, getAccountByUserId } from "@/actions/auth";
+import { getUser, getAccountByUserId } from "@/actions/auth";
 
 export default async function AuthLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const session = await getSession();
-	const user = session?.data?.user;
-
+	const resp = await getUser();
+	const user = resp?.data;
 	let account
+
 	if (user) {
 		const resp = await getAccountByUserId({ userId: user.id });
 		account = resp?.data?.accounts[0];
 	}
 
 	return (
-		<AuthProvider user={user} account={account} subscription={undefined}>
+		<AuthProvider user={user || undefined} account={account} subscription={undefined}>
 			<div className="h-full w-full grid grid-cols-2">
 				<div className="bg-secondary hidden md:col-span-1 md:flex flex-col justify-between items-start p-8" >
 					<div className="flex items-center">

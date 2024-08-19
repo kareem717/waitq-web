@@ -4,9 +4,10 @@ import {
 } from "next-safe-action";
 
 import { AccountsApi, WaitlistsApi, SubscriptionsApi } from "@/lib/sdk/apis";
-import { Configuration } from "@/lib/sdk/runtime";
+import { Configuration, ResponseError } from "@/lib/sdk/runtime";
 import { env } from "@/env";
 import supabase from "@/lib/utils/supabase/server";
+import { ErrorModel } from "./sdk";
 
 class ActionError extends Error {
 	constructor(message: string, public statusCode: number) {
@@ -32,9 +33,17 @@ const apiClient = (accessToken?: string) => {
 };
 
 export const actionClient = createSafeActionClient({
-	handleReturnedServerError: (error) => {
-		if (error instanceof ActionError) {
-			return error.message;
+	handleReturnedServerError: async (error) => {
+		if (error instanceof ResponseError) {
+			console.error(error.cause);
+			try {
+				const resp = (await error.response.json()) as ErrorModel;
+
+				return resp.detail;
+			} catch (e) {
+				console.error(e);
+				return DEFAULT_SERVER_ERROR_MESSAGE;
+			}
 		}
 
 		return DEFAULT_SERVER_ERROR_MESSAGE;
@@ -45,12 +54,18 @@ export const actionClient = createSafeActionClient({
 }).use(async ({ next, clientInput, metadata }) => {
 	const sb = supabase();
 
-	const session = await sb.auth.getSession();
+	const {
+		data: { session },
+	} = await sb.auth.getSession();
+
+	const {
+		data: { user },
+	} = await sb.auth.getUser();
 
 	return next({
 		ctx: {
-			apiClient: apiClient(session.data.session?.access_token),
-			session: session.data.session,
+			apiClient: apiClient(session?.access_token),
+			user: user,
 		},
 	});
 });
@@ -67,22 +82,15 @@ export const anonWaitlistActionClient = actionClient.use(
 			throw new ActionError("Waitlist ID is required", 400);
 		}
 
-		try {
-			const response = await ctx.apiClient.waitlistsApi.getWaitlistApiKeyById({
-				id: clientInput.waitlistId as string,
-			});
+		const response = await ctx.apiClient.waitlistsApi.getWaitlistApiKeyById({
+			id: clientInput.waitlistId as string,
+		});
 
-			return next({
-				ctx: {
-					apiClient: apiClient(response.waitlist.anonKey),
-				},
-			});
-		} catch (error) {
-			throw new ActionError(
-				"An error occurred while fetching the waitlist API key",
-				500
-			);
-		}
+		return next({
+			ctx: {
+				apiClient: apiClient(response.waitlist.anonKey),
+			},
+		});
 	}
 );
 
@@ -98,19 +106,12 @@ export const serviceWaitlistActionClient = actionClient.use(
 			throw new ActionError("Waitlist ID is required", 400);
 		}
 
-		try {
-			const response = await ctx.apiClient.waitlistsApi.getWaitlistApiKeyById({
-				id: clientInput.waitlistId as string,
-			});
+		const response = await ctx.apiClient.waitlistsApi.getWaitlistApiKeyById({
+			id: clientInput.waitlistId as string,
+		});
 
-			return next({
-				ctx: { apiClient: apiClient(response.waitlist.serviceKey) },
-			});
-		} catch (error) {
-			throw new ActionError(
-				"An error occurred while fetching the waitlist API key",
-				500
-			);
-		}
+		return next({
+			ctx: { apiClient: apiClient(response.waitlist.serviceKey) },
+		});
 	}
 );

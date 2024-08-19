@@ -1,7 +1,6 @@
 "use client"
 
 import { ComponentPropsWithoutRef, FC, useState } from "react"
-import { Waitlist } from "@/lib/sdk"
 import {
   Card,
   CardContent,
@@ -24,6 +23,8 @@ import { Icons } from "@/components/icons"
 import { toast } from "sonner"
 import { useAction } from "next-safe-action/hooks"
 import { deleteWaitlist } from "@/actions/waitlist"
+import { useRouter } from "next/navigation"
+import redirects from "@/config/redirects"
 
 export interface DeleteWaitlistCardProps extends ComponentPropsWithoutRef<typeof Card> {
   waitlistId: string
@@ -31,6 +32,7 @@ export interface DeleteWaitlistCardProps extends ComponentPropsWithoutRef<typeof
 
 export const DeleteWaitlistCard: FC<DeleteWaitlistCardProps> = ({ waitlistId, ...props }) => {
   const [isDeleting, setIsDeleting] = useState(false)
+  const router = useRouter()
 
   const { executeAsync } = useAction(deleteWaitlist, {
     onExecute: () => {
@@ -45,6 +47,8 @@ export const DeleteWaitlistCard: FC<DeleteWaitlistCardProps> = ({ waitlistId, ..
       toast.success("Done!", {
         description: "The waitlist has been deleted.",
       })
+      router.push(redirects.app.dashboard)
+      router.refresh()
     },
     onSettled: () => {
       setIsDeleting(false)

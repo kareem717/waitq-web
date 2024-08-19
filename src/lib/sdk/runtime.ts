@@ -260,7 +260,7 @@ function isFormData(value: any): value is FormData {
 export class ResponseError extends Error {
     override name: "ResponseError" = "ResponseError";
     constructor(public response: Response, msg?: string) {
-        super(msg);
+    super(msg);
     }
 }
 

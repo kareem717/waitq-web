@@ -50,7 +50,6 @@ export function CancelAccountSubscriptionOutputBodyFromJSONTyped(json: any, igno
         return json;
     }
     return {
-        
         '$schema': json['$schema'] == null ? undefined : json['$schema'],
         'message': json['message'],
     };
@@ -61,7 +60,6 @@ export function CancelAccountSubscriptionOutputBodyToJSON(value?: Omit<CancelAcc
         return value;
     }
     return {
-        
         'message': value['message'],
     };
 }

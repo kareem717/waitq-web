@@ -3,7 +3,7 @@ import { MobileSidebar } from "@/components/app/sidebar"
 import { Sidebar } from "@/components/app/sidebar"
 import { Icons } from "@/components/icons"
 import AuthProvider from "@/components/providers/auth-provider";
-import { getSession, getAccountByUserId } from "@/actions/auth";
+import { getUser, getAccountByUserId } from "@/actions/auth";
 import { redirect } from "next/navigation";
 import redirects from "@/config/redirects";
 import { getWaitlistByAccountId } from "@/actions/waitlist";
@@ -14,8 +14,8 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
-  const user = session?.data?.user;
+  const resp = await getUser();
+  const user = resp?.data;
 
   if (!user) {
     redirect(redirects.auth.login);
@@ -50,7 +50,7 @@ export default async function AppLayout({
   }
 
   return (
-    <AuthProvider user={session?.data?.user} account={account} subscription={subscriptionResp?.data?.subscriptionRelationship}>
+    <AuthProvider user={user} account={account} subscription={subscriptionResp?.data?.subscriptionRelationship}>
       <div className="relative grid w-full h-full grid-rows-[auto_1fr] md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
         <Sidebar className="row-span-full" waitlists={waitlistsResp?.data?.waitlists || []} accountId={account.id} />
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">

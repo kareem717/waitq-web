@@ -33,7 +33,7 @@ export interface PricingCardProps extends ComponentPropsWithoutRef<"div"> {
 }
 
 export const PricingCard: FC<PricingCardProps> = ({ className, plans, ...props }) => {
-  const [isAnnual, setIsAnnual] = useState(false)
+  const [isAnnual, setIsAnnual] = useState(true)
   const { account, subscription } = useAuth();
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter();
@@ -62,6 +62,7 @@ export const PricingCard: FC<PricingCardProps> = ({ className, plans, ...props }
     },
     onSuccess: () => {
       toast.success("Subscription cancelled successfully.")
+      router.refresh()
     },
     onError: ({ error }) => {
       console.error(error)
@@ -75,7 +76,7 @@ export const PricingCard: FC<PricingCardProps> = ({ className, plans, ...props }
     onSettled: () => {
       setIsLoading(false)
     },
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       toast.success("Subscription updated successfully.")
       router.refresh()
     },
@@ -108,6 +109,7 @@ export const PricingCard: FC<PricingCardProps> = ({ className, plans, ...props }
       redirectUrl: window.location.href,
     })
   }
+
   const handleCancel = async () => {
     if (isLoading) {
       toast.info("Please wait while we process your request.")
@@ -153,12 +155,12 @@ export const PricingCard: FC<PricingCardProps> = ({ className, plans, ...props }
           <div
             key={index}
             className={cn("rounded-lg border p-6 relative flex flex-col justify-between gap-8",
-              plan.isHighlighted || subscription?.stripePriceID === plan.monthlyPrice.stripePriceId
+              plan.isHighlighted
                 ? "border-primary border-2 shadow-lg scale-105"
                 : "border-border")}
           >
-            {(plan.isHighlighted || subscription?.stripePriceID === plan.monthlyPrice.stripePriceId)
-              && (<div className="absolute -top-4 left-1/2 transform -translate-x-1/2 mx-auto rounded-full px-5 py-1 border-primary border-2 bg-card">
+            {plan.isHighlighted
+              && (<div className="absolute -top-4 left-1/2 transform -translate-x-1/2 mx-auto rounded-full px-5 py-1 border-primary border-2 bg-card font-semibold">
                 Best value
               </div>)}
             <div>
@@ -170,7 +172,7 @@ export const PricingCard: FC<PricingCardProps> = ({ className, plans, ...props }
                 <span className="text-muted-foreground">/{isAnnual ? 'year' : 'month'}</span>
               </div>
               {isAnnual && calculateSavings(plan.monthlyPrice.amount, plan.annualPrice.amount) !== "0.00" && (
-                <Badge className="absolute top-4 right-4">
+                <Badge className="absolute top-7 right-4">
                   Save ${calculateSavings(plan.monthlyPrice.amount, plan.annualPrice.amount)} per year
                 </Badge>
               )}
@@ -199,15 +201,25 @@ export const PricingCard: FC<PricingCardProps> = ({ className, plans, ...props }
             <Button className="w-full"
               onClick={() => {
                 if (subscription) {
-                  const isCurrentPlan = plan.annualPrice.stripePriceId === subscription.stripePriceID;
-                  isCurrentPlan ? handleCancel() : handleUpdate(plan.annualPrice.stripePriceId);
+                  if (isAnnual) {
+                    const isCurrentPlan = plan.annualPrice.stripePriceId === subscription.stripePriceID
+                    isCurrentPlan ? handleCancel() : handleUpdate(plan.annualPrice.stripePriceId);
+                  } else {
+                    const isCurrentPlan = plan.monthlyPrice.stripePriceId === subscription.stripePriceID
+                    isCurrentPlan ? handleCancel() : handleUpdate(plan.monthlyPrice.stripePriceId);
+                  }
                 } else {
                   handleSubscribe(isAnnual ? plan.annualPrice.stripePriceId : plan.monthlyPrice.stripePriceId);
                 }
               }}
+              variant={subscription
+                ? subscription.stripePriceID === (isAnnual ? plan.annualPrice.stripePriceId : plan.monthlyPrice.stripePriceId)
+                  ? "secondary"
+                  : "default"
+                : "default"}
               disabled={isLoading}
             >
-              {isLoading && (<Icons.spinner className="w-4 h-4 mr-2" />)}
+              {isLoading && (<Icons.spinner className="w-4 h-4 mr-2 animate-spin" />)}
               {subscription
                 ? subscription.stripePriceID === (isAnnual ? plan.annualPrice.stripePriceId : plan.monthlyPrice.stripePriceId)
                   ? "Cancel"
