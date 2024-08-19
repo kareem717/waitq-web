@@ -1,25 +1,23 @@
 import { LogoDiv } from "@/components/logo-div";
 import AuthProvider from "@/components/providers/auth-provider";
-import supabase from "@/lib/utils/supabase/server";
-import { getAccountByUserId } from "@/actions/account";
+import { getSession, getAccountByUserId } from "@/actions/auth";
 
 export default async function AuthLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const sb = supabase();
-	const { data } = await sb.auth.getUser();
+	const session = await getSession();
+	const user = session?.data?.user;
 
-	let account = null;
-
-	if (data?.user) {
-		const resp = await getAccountByUserId({ userId: data.user.id });
+	let account
+	if (user) {
+		const resp = await getAccountByUserId({ userId: user.id });
 		account = resp?.data?.accounts[0];
 	}
 
 	return (
-		<AuthProvider user={data?.user} account={account || null}>
+		<AuthProvider user={user} account={account} subscription={undefined}>
 			<div className="h-full w-full grid grid-cols-2">
 				<div className="bg-secondary hidden md:col-span-1 md:flex flex-col justify-between items-start p-8" >
 					<div className="flex items-center">

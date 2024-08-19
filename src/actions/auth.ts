@@ -47,3 +47,22 @@ export const getAccountByUserId = actionClient
 			includeDeleted: false,
 		});
 	});
+
+export const getLoggedInAccount = actionClient.action(
+	async ({ ctx: { apiClient, session } }) => {
+		const userId = session?.user?.id;
+
+		if (!userId) {
+			return null;
+		}
+
+		return await apiClient.accountsApi.getAccountsByUserId({
+			userId,
+			includeDeleted: false,
+		});
+	}
+);
+
+export const getSession = actionClient.action(async ({ ctx: { session } }) => {
+	return session;
+});

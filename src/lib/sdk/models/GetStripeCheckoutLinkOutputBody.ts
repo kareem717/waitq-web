@@ -13,71 +13,64 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Email } from './Email';
-import {
-    EmailFromJSON,
-    EmailFromJSONTyped,
-    EmailToJSON,
-} from './Email';
-
 /**
  * 
  * @export
- * @interface AddEmailsOutputBody
+ * @interface GetStripeCheckoutLinkOutputBody
  */
-export interface AddEmailsOutputBody {
+export interface GetStripeCheckoutLinkOutputBody {
     /**
      * A URL to the JSON Schema for this object.
      * @type {string}
-     * @memberof AddEmailsOutputBody
+     * @memberof GetStripeCheckoutLinkOutputBody
      */
     readonly $schema?: string;
     /**
      * 
-     * @type {Email}
-     * @memberof AddEmailsOutputBody
+     * @type {string}
+     * @memberof GetStripeCheckoutLinkOutputBody
      */
-    emailAdded: Email;
+    link: string;
     /**
      * 
      * @type {string}
-     * @memberof AddEmailsOutputBody
+     * @memberof GetStripeCheckoutLinkOutputBody
      */
     message: string;
 }
 
 /**
- * Check if a given object implements the AddEmailsOutputBody interface.
+ * Check if a given object implements the GetStripeCheckoutLinkOutputBody interface.
  */
-export function instanceOfAddEmailsOutputBody(value: object): value is AddEmailsOutputBody {
-    if (!('emailAdded' in value) || value['emailAdded'] === undefined) return false;
+export function instanceOfGetStripeCheckoutLinkOutputBody(value: object): value is GetStripeCheckoutLinkOutputBody {
+    if (!('link' in value) || value['link'] === undefined) return false;
     if (!('message' in value) || value['message'] === undefined) return false;
     return true;
 }
 
-export function AddEmailsOutputBodyFromJSON(json: any): AddEmailsOutputBody {
-    return AddEmailsOutputBodyFromJSONTyped(json, false);
+export function GetStripeCheckoutLinkOutputBodyFromJSON(json: any): GetStripeCheckoutLinkOutputBody {
+    return GetStripeCheckoutLinkOutputBodyFromJSONTyped(json, false);
 }
 
-export function AddEmailsOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): AddEmailsOutputBody {
+export function GetStripeCheckoutLinkOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): GetStripeCheckoutLinkOutputBody {
     if (json == null) {
         return json;
     }
     return {
         
         '$schema': json['$schema'] == null ? undefined : json['$schema'],
-        'emailAdded': EmailFromJSON(json['emailAdded']),
+        'link': json['link'],
         'message': json['message'],
     };
 }
 
-export function AddEmailsOutputBodyToJSON(value?: Omit<AddEmailsOutputBody, '$schema'> | null): any {
+export function GetStripeCheckoutLinkOutputBodyToJSON(value?: Omit<GetStripeCheckoutLinkOutputBody, '$schema'> | null): any {
     if (value == null) {
         return value;
     }
     return {
         
-        'emailAdded': EmailToJSON(value['emailAdded']),
+        'link': value['link'],
         'message': value['message'],
     };
 }

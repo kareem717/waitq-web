@@ -16,36 +16,36 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface DeleteAccountOutputBody
+ * @interface CancelAccountSubscriptionOutputBody
  */
-export interface DeleteAccountOutputBody {
+export interface CancelAccountSubscriptionOutputBody {
     /**
      * A URL to the JSON Schema for this object.
      * @type {string}
-     * @memberof DeleteAccountOutputBody
+     * @memberof CancelAccountSubscriptionOutputBody
      */
     readonly $schema?: string;
     /**
      * 
      * @type {string}
-     * @memberof DeleteAccountOutputBody
+     * @memberof CancelAccountSubscriptionOutputBody
      */
     message: string;
 }
 
 /**
- * Check if a given object implements the DeleteAccountOutputBody interface.
+ * Check if a given object implements the CancelAccountSubscriptionOutputBody interface.
  */
-export function instanceOfDeleteAccountOutputBody(value: object): value is DeleteAccountOutputBody {
+export function instanceOfCancelAccountSubscriptionOutputBody(value: object): value is CancelAccountSubscriptionOutputBody {
     if (!('message' in value) || value['message'] === undefined) return false;
     return true;
 }
 
-export function DeleteAccountOutputBodyFromJSON(json: any): DeleteAccountOutputBody {
-    return DeleteAccountOutputBodyFromJSONTyped(json, false);
+export function CancelAccountSubscriptionOutputBodyFromJSON(json: any): CancelAccountSubscriptionOutputBody {
+    return CancelAccountSubscriptionOutputBodyFromJSONTyped(json, false);
 }
 
-export function DeleteAccountOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): DeleteAccountOutputBody {
+export function CancelAccountSubscriptionOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): CancelAccountSubscriptionOutputBody {
     if (json == null) {
         return json;
     }
@@ -56,7 +56,7 @@ export function DeleteAccountOutputBodyFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function DeleteAccountOutputBodyToJSON(value?: Omit<DeleteAccountOutputBody, '$schema'> | null): any {
+export function CancelAccountSubscriptionOutputBodyToJSON(value?: Omit<CancelAccountSubscriptionOutputBody, '$schema'> | null): any {
     if (value == null) {
         return value;
     }

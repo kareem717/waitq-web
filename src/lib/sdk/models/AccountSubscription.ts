@@ -16,117 +16,117 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface Waitlist
+ * @interface AccountSubscription
  */
-export interface Waitlist {
+export interface AccountSubscription {
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
+     * @memberof AccountSubscription
      */
     accountId: string;
     /**
      * 
-     * @type {string}
-     * @memberof Waitlist
-     */
-    anonKey: string;
-    /**
-     * 
      * @type {Date}
-     * @memberof Waitlist
+     * @memberof AccountSubscription
      */
     createdAt: Date;
     /**
      * 
      * @type {Date}
-     * @memberof Waitlist
+     * @memberof AccountSubscription
      */
     deletedAt: Date | null;
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
+     * @memberof AccountSubscription
      */
     id: string;
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
+     * @memberof AccountSubscription
      */
-    jwtSecret: string;
+    stripeCustomerID: string;
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
+     * @memberof AccountSubscription
      */
-    name: string;
+    stripePriceID: string;
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
+     * @memberof AccountSubscription
      */
-    serviceKey: string;
+    stripeSubscriptionID: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountSubscription
+     */
+    subscriptionId: string;
     /**
      * 
      * @type {Date}
-     * @memberof Waitlist
+     * @memberof AccountSubscription
      */
     updatedAt: Date | null;
 }
 
 /**
- * Check if a given object implements the Waitlist interface.
+ * Check if a given object implements the AccountSubscription interface.
  */
-export function instanceOfWaitlist(value: object): value is Waitlist {
+export function instanceOfAccountSubscription(value: object): value is AccountSubscription {
     if (!('accountId' in value) || value['accountId'] === undefined) return false;
-    if (!('anonKey' in value) || value['anonKey'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('deletedAt' in value) || value['deletedAt'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
-    if (!('jwtSecret' in value) || value['jwtSecret'] === undefined) return false;
-    if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('serviceKey' in value) || value['serviceKey'] === undefined) return false;
+    if (!('stripeCustomerID' in value) || value['stripeCustomerID'] === undefined) return false;
+    if (!('stripePriceID' in value) || value['stripePriceID'] === undefined) return false;
+    if (!('stripeSubscriptionID' in value) || value['stripeSubscriptionID'] === undefined) return false;
+    if (!('subscriptionId' in value) || value['subscriptionId'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     return true;
 }
 
-export function WaitlistFromJSON(json: any): Waitlist {
-    return WaitlistFromJSONTyped(json, false);
+export function AccountSubscriptionFromJSON(json: any): AccountSubscription {
+    return AccountSubscriptionFromJSONTyped(json, false);
 }
 
-export function WaitlistFromJSONTyped(json: any, ignoreDiscriminator: boolean): Waitlist {
+export function AccountSubscriptionFromJSONTyped(json: any, ignoreDiscriminator: boolean): AccountSubscription {
     if (json == null) {
         return json;
     }
     return {
         
         'accountId': json['accountId'],
-        'anonKey': json['anonKey'],
         'createdAt': (new Date(json['createdAt'])),
         'deletedAt': (json['deletedAt'] == null ? null : new Date(json['deletedAt'])),
         'id': json['id'],
-        'jwtSecret': json['jwtSecret'],
-        'name': json['name'],
-        'serviceKey': json['serviceKey'],
+        'stripeCustomerID': json['stripeCustomerID'],
+        'stripePriceID': json['stripePriceID'],
+        'stripeSubscriptionID': json['stripeSubscriptionID'],
+        'subscriptionId': json['subscriptionId'],
         'updatedAt': (json['updatedAt'] == null ? null : new Date(json['updatedAt'])),
     };
 }
 
-export function WaitlistToJSON(value?: Waitlist | null): any {
+export function AccountSubscriptionToJSON(value?: AccountSubscription | null): any {
     if (value == null) {
         return value;
     }
     return {
         
         'accountId': value['accountId'],
-        'anonKey': value['anonKey'],
         'createdAt': ((value['createdAt']).toISOString()),
         'deletedAt': (value['deletedAt'] == null ? null : (value['deletedAt'] as any).toISOString()),
         'id': value['id'],
-        'jwtSecret': value['jwtSecret'],
-        'name': value['name'],
-        'serviceKey': value['serviceKey'],
+        'stripeCustomerID': value['stripeCustomerID'],
+        'stripePriceID': value['stripePriceID'],
+        'stripeSubscriptionID': value['stripeSubscriptionID'],
+        'subscriptionId': value['subscriptionId'],
         'updatedAt': (value['updatedAt'] == null ? null : (value['updatedAt'] as any).toISOString()),
     };
 }
