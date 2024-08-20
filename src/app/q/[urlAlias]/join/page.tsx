@@ -1,5 +1,5 @@
 import { getWaitlistByUrlAlias } from "@/actions/waitlist";
-import { JoinWaitlistForm } from "@/components/app/waitlist/join-waitlist-form";
+import { JoinWaitlistForm } from "@/components/app/waitlist/forms/join-waitlist-form";
 import {
   Card,
   CardContent,

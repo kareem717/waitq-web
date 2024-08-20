@@ -40,6 +40,7 @@ export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onS
   const [isLoading, setIsLoading] = useState(false)
   const { account } = useAuth()
   const router = useRouter()
+  
   if (!account) throw Error("Account not found")
 
   const form = useForm<z.infer<typeof formSchema>>({

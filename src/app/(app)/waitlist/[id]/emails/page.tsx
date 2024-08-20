@@ -11,7 +11,7 @@ export default async function WaitlistEmailsPage({ params }: { params: { id: str
   }
 
   return (
-    <div className="space-y-6 -mt-8">
+    <div className="space-y-6">
       <h1 className="text-3xl font-bold">Emails</h1>
       <WaitlistAnalytics data={resp.data} />
       <div className="flex md:flex-col gap-6 flex-col-reverse">

@@ -1,20 +1,14 @@
 import { ComponentPropsWithoutRef, FC } from "react"
-
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader } from "@/components/ui/sheet"
 import { Menu } from "./menu"
 import { Icons } from "@/components/icons"
 import { ModeToggle } from "@/components/app/mode-toggle"
-import { cn } from "@/lib/utils"
 import { LogoDiv } from "@/components/logo-div"
-import { Waitlist } from "@/lib/sdk"
 
-export interface MobileSidebarProps extends ComponentPropsWithoutRef<typeof Sheet> {
-  waitlists: Waitlist[]
-  accountId: string
-}
+export interface MobileSidebarProps extends ComponentPropsWithoutRef<typeof Sheet> { }
 
-export const MobileSidebar: FC<MobileSidebarProps> = ({ waitlists, accountId, ...props }) => {
+export const MobileSidebar: FC<MobileSidebarProps> = ({ ...props }) => {
   return (
     <Sheet {...props}>
       <SheetTrigger asChild>
@@ -31,7 +25,7 @@ export const MobileSidebar: FC<MobileSidebarProps> = ({ waitlists, accountId, ..
         <SheetHeader className="px-2">
           <LogoDiv />
         </SheetHeader>
-        <Menu waitlists={waitlists} accountId={accountId} className="px-2" />
+        <Menu className="px-2" />
         <ModeToggle className="mt-auto px-2 text-sm font-medium" />
       </SheetContent>
     </Sheet>

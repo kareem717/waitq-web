@@ -1,6 +1,4 @@
-'use client'
-
-import { ComponentPropsWithoutRef, FC, useState, useEffect } from "react"
+import { ComponentPropsWithoutRef, FC } from "react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { Button } from "@/components/ui/button";
@@ -10,123 +8,28 @@ import {
   TooltipProvider
 } from "@/components/ui/tooltip";
 import NavigationConfig from "@/config/navigation"
-import { usePathname } from "next/navigation";
 import { CollapseMenuButton } from "./collapsible-menu-button"
 import { Icons } from "@/components/icons";
-import { getWaitlistByAccountId } from "@/actions/waitlist";
-import { useAuth } from "@/components/providers/auth-provider";
-import { Waitlist } from "@/lib/sdk";
-import redirects from "@/config/redirects";
-import { type Menu as MenuType, type Submenu as SubmenuType } from "@/config/navigation";
+import { headers } from "next/headers"
 
-type Submenu = SubmenuType & {
-  active: boolean;
-}
+export interface MenuProps extends ComponentPropsWithoutRef<"nav"> { }
 
-type SidebarMenu = MenuType & {
-  active: boolean;
-  submenus: Submenu[];
-}
+export const Menu: FC<MenuProps> = ({ className, ...props }) => {
+  const headersList = headers();
+  const fullUrl = headersList.get('referer') || "";
+  const path = fullUrl ? new URL(fullUrl).pathname : "";
 
-type Group = {
-  groupLabel: string;
-  menus: SidebarMenu[];
-}
-
-//TODO: Clean up this code
-const getMenuList = (pathname: string, accountId: string, waitlists: Waitlist[]) => {
-  const processSubmenus = (submenus: SubmenuType[], pathname: string) =>
-    submenus.map(submenu => ({
-      ...submenu,
-      active: pathname === submenu.pathIdentifier,
-    }));
-
-  const processWaitlists = (accountId: string, pathname: string): SidebarMenu[] => {
-    return waitlists.flatMap(waitlist => {
-      const index = redirects.app.waitlist.index.replace(":id", waitlist.id);
-      const settings = redirects.app.waitlist.settings.replace(":id", waitlist.id);
-      const edit = redirects.app.waitlist.edit.replace(":id", waitlist.id);
-      const emails = redirects.app.waitlist.emails.replace(":id", waitlist.id);
-
-      return [
-        {
-          href: "",
-          label: waitlist.name,
-          pathIdentifier: index,
-          active: pathname === index || pathname === settings,
-          icon: "mail",
-          submenus: [{
-            label: "Settings",
-            href: settings,
-            pathIdentifier: settings,
-            active: pathname === settings,
-          },
-          {
-            label: "Edit",
-            href: edit,
-            pathIdentifier: edit,
-            active: pathname === edit,
-          },
-          {
-            label: "Emails",
-            href: emails,
-            pathIdentifier: emails,
-            active: pathname === emails,
-          },
-          ],
-        },
-      ];
-    });
-  };
-
-  const processMenus = (group: Group, pathname: string, accountId: string) => {
-    const menus = group.menus.map(menu => {
-      const submenus = processSubmenus(menu.submenus, pathname);
-
-      return {
-        ...menu,
-        active: pathname === menu.pathIdentifier, // Add active property
-        submenus,
-      };
-    });
-
-    if (group.groupLabel === "Waitlists") {
-      const waitlistMenus = processWaitlists(accountId, pathname);
-      return {
-        ...group,
-        menus: [...menus, ...waitlistMenus],
-      };
-    }
-
-    return {
-      ...group,
-      menus,
-    };
-  };
-
-  const menuList = NavigationConfig.map(group => processMenus({
+  const menuList = NavigationConfig.map(group => ({
     ...group,
     menus: group.menus.map(menu => ({
       ...menu,
-      active: false, // Initialize active property
-      submenus: menu.submenus.map(submenu => ({
+      active: path === menu.pathIdentifier,
+      submenus: menu.submenus.map((submenu) => ({
         ...submenu,
-        active: false, // Initialize active property
-      }))
-    }))
-  }, pathname, accountId))
-
-  return menuList;
-};
-
-export interface MenuProps extends ComponentPropsWithoutRef<"nav"> {
-  waitlists: Waitlist[];
-  accountId: string;
-}
-
-export const Menu: FC<MenuProps> = ({ className, waitlists, accountId, ...props }) => {
-  const pathname = usePathname();
-  const menuList = getMenuList(pathname, accountId, waitlists)
+        active: path === submenu.pathIdentifier,
+      })),
+    })),
+  }));
 
   return (
     <nav className={cn("grid items-start px-2 text-sm font-medium lg:px-4", className)} {...props}>

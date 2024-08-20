@@ -1,4 +1,4 @@
-import { EditWaitlistForm } from "@/components/app/waitlist/edit-waitlist-form"
+import { EditWaitlistForm } from "@/components/app/waitlist/forms/edit-waitlist-form"
 import {
   Card,
   CardContent,

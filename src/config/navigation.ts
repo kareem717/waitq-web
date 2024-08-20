@@ -52,18 +52,6 @@ const NavigationConfig: Group[] = [
 			},
 		],
 	},
-	{
-		groupLabel: "Waitlists",
-		menus: [
-			{
-				href: redirects.app.waitlist.create,
-				label: "Create",
-				pathIdentifier: redirects.app.waitlist.create,
-				icon: "add",
-				submenus: [],
-			},
-		],
-	},
 ];
 
 export default NavigationConfig;

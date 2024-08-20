@@ -21,7 +21,7 @@ export default function Error({
 
   return (
     <div className="flex flex-col items-center gap-4 justify-center h-screen w-full p-4">
-      <Icons.biddropper className='w-40 h-40' />
+      <Icons.logoSmall className='w-40 h-40' />
       <h2 className='text-2xl font-semibold'>{error.message || "Something went wrong!"} </h2>
       <div className='flex gap-4 w-full md:w-1/3 max-w-md min-w-[200px]'>
         <Button
