@@ -154,7 +154,7 @@ export const PricingCard: FC<PricingCardProps> = ({ className, plans, ...props }
         {plans.map((plan, index) => (
           <div
             key={index}
-            className={cn("rounded-lg border p-6 relative flex flex-col justify-between gap-8",
+            className={cn("rounded-lg border p-6 relative flex flex-col justify-between gap-8 bg-card",
               plan.isHighlighted
                 ? "border-primary border-2 shadow-lg scale-105"
                 : "border-border")}
