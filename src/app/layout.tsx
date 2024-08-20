@@ -5,10 +5,8 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import AuthProvider from "@/components/providers/auth-provider";
-import { getAccountByUserId, getUser } from "@/actions/auth";
+import { getLoggedInAccount, getUser } from "@/actions/auth";
 import { getSubscriptionByAccountId } from "@/actions/subscription";
-import redirects from "@/config/redirects";
-import { redirect } from "next/navigation";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,25 +26,21 @@ export default async function RootLayout({
   const resp = await getUser();
   const user = resp?.data;
 
-  if (!user) {
-    redirect(redirects.auth.login);
-  }
+  let subscription
 
-  const accResp = await getAccountByUserId({
-    userId: user.id,
-  });
-  const account = accResp?.data?.accounts[0];
+  const accountResp = await getLoggedInAccount();
+  const account = accountResp?.data?.accounts[0];
 
-  if (!account) {
-    redirect(redirects.auth.createAccount);
-  }
+  if (account) {
+    const subscriptionResp = await getSubscriptionByAccountId({
+      accountId: account.id,
+    });
 
-  const subscriptionResp = await getSubscriptionByAccountId({
-    accountId: account.id,
-  });
-  
-  if (subscriptionResp?.serverError || subscriptionResp?.validationErrors) {
-    throw new Error(subscriptionResp?.serverError || "Something went wrong.");
+    if (subscriptionResp?.serverError || subscriptionResp?.validationErrors) {
+      throw new Error(subscriptionResp?.serverError || "Something went wrong.");
+    }
+
+    subscription = subscriptionResp?.data?.subscriptionRelationship;
   }
 
   return (
@@ -57,7 +51,7 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
-        <AuthProvider user={user} account={account} subscription={subscriptionResp?.data?.subscriptionRelationship}>
+        <AuthProvider user={user || undefined} account={account} subscription={subscription}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
