@@ -25,6 +25,12 @@ export interface UpdateWaitlistFieldsStruct {
      * @memberof UpdateWaitlistFieldsStruct
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateWaitlistFieldsStruct
+     */
+    urlAlias: string;
 }
 
 /**
@@ -32,6 +38,7 @@ export interface UpdateWaitlistFieldsStruct {
  */
 export function instanceOfUpdateWaitlistFieldsStruct(value: object): value is UpdateWaitlistFieldsStruct {
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('urlAlias' in value) || value['urlAlias'] === undefined) return false;
     return true;
 }
 
@@ -46,6 +53,7 @@ export function UpdateWaitlistFieldsStructFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'name': json['name'],
+        'urlAlias': json['urlAlias'],
     };
 }
 
@@ -56,6 +64,7 @@ export function UpdateWaitlistFieldsStructToJSON(value?: UpdateWaitlistFieldsStr
     return {
         
         'name': value['name'],
+        'urlAlias': value['urlAlias'],
     };
 }
 

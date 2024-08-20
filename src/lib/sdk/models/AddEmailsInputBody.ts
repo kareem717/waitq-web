@@ -30,14 +30,14 @@ export interface AddEmailsInputBody {
      * @type {string}
      * @memberof AddEmailsInputBody
      */
-    emails: string;
+    email: string;
 }
 
 /**
  * Check if a given object implements the AddEmailsInputBody interface.
  */
 export function instanceOfAddEmailsInputBody(value: object): value is AddEmailsInputBody {
-    if (!('emails' in value) || value['emails'] === undefined) return false;
+    if (!('email' in value) || value['email'] === undefined) return false;
     return true;
 }
 
@@ -52,7 +52,7 @@ export function AddEmailsInputBodyFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         '$schema': json['$schema'] == null ? undefined : json['$schema'],
-        'emails': json['emails'],
+        'email': json['email'],
     };
 }
 
@@ -62,7 +62,7 @@ export function AddEmailsInputBodyToJSON(value?: Omit<AddEmailsInputBody, '$sche
     }
     return {
         
-        'emails': value['emails'],
+        'email': value['email'],
     };
 }
 

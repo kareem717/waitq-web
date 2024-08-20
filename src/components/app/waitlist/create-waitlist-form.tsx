@@ -1,7 +1,6 @@
 "use client";
 
 import { ComponentPropsWithoutRef, FC, useState } from "react"
-import { Waitlist } from "@/lib/sdk"
 import { cn } from "@/lib/utils"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -19,10 +18,11 @@ import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { createWaitlist } from "@/actions/waitlist";
+import { createWaitlist, isUrlAliasAvailable } from "@/actions/waitlist";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
+import { env } from "@/env";
 
 export interface CreateWaitlistFormProps extends ComponentPropsWithoutRef<'form'> {
   onSuccess?: () => void
@@ -31,10 +31,13 @@ export interface CreateWaitlistFormProps extends ComponentPropsWithoutRef<'form'
 const formSchema = z.object({
   name: z.string().min(3),
   accountId: z.string().uuid(),
+  urlAlias: z.string().min(1).max(32),
 })
 
 export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onSuccess, ...props }) => {
   const [isCreating, setIsCreating] = useState(false)
+  const [available, setAvailable] = useState<boolean | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
   const { account } = useAuth()
   const router = useRouter()
   if (!account) throw Error("Account not found")
@@ -44,6 +47,7 @@ export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onS
     defaultValues: {
       name: "",
       accountId: account.id,
+      urlAlias: "",
     },
   })
 
@@ -69,7 +73,44 @@ export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onS
     }
   })
 
+  const { executeAsync: checkAliasAvailable } = useAction(isUrlAliasAvailable, {
+    onError: ({ error }) => {
+      toast.error("Something went wrong checking alias availability", {
+        description: error.serverError || "An unknown error occurred",
+      })
+    },
+    onExecute: () => {
+      setIsLoading(true)
+    },
+    onSettled: ({ result: { data } }) => {
+      setIsLoading(false)
+      setAvailable(!!data?.available)
+    }
+  })
+
+  const isAliasAvailable = async () => {
+    setTimeout(async () => {
+      setIsLoading(true)
+      const urlAlias = form.getValues("urlAlias")
+      if (!urlAlias) {
+        setIsLoading(false)
+        setAvailable(null)
+        return false
+      }
+
+      const result = await checkAliasAvailable({ urlAlias })
+      return !!result?.data?.available
+    }, 800);
+  }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!isAliasAvailable()) {
+      form.setError("urlAlias", {
+        message: "Alias is not available",
+      })
+      return
+    }
+
     await executeAsync({ waitlist: values })
   }
 
@@ -87,6 +128,38 @@ export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onS
               </FormControl>
               <FormDescription>
                 This is the public display name of the waitlist.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="urlAlias"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <div className="flex items-center gap-2">
+                  <span>URL alias</span>
+                  {isLoading
+                    ? <Icons.spinner className="h-3 w-3 animate-spin text-muted-foreground" />
+                    : available === null ?
+                      null : !!available ? (
+                        <span className="text-green-500 text-xs">Available</span>
+                      ) : (
+                        <span className="text-red-500 text-xs">Unavailable</span>
+                      )
+                  }
+                </div>
+              </FormLabel>
+              <FormControl>
+                <Input  {...field} onChange={(e) => {
+                  field.onChange(e.target.value.toLowerCase())
+                  isAliasAvailable()
+                }} />
+              </FormControl>
+              <FormDescription>
+                Your users will be able to access the waitlist at <code>{env.NEXT_PUBLIC_APP_URL}/q/{field.value}</code>
               </FormDescription>
               <FormMessage />
             </FormItem>

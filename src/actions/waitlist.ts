@@ -1,6 +1,10 @@
 "use server";
 
-import { actionClient, serviceWaitlistActionClient } from "@/lib/safe-action";
+import {
+	actionClient,
+	anonWaitlistActionClient,
+	serviceWaitlistActionClient,
+} from "@/lib/safe-action";
 import { z } from "zod";
 
 const paginationRequestSchema = z.object({
@@ -38,6 +42,14 @@ export const getWaitlistById = serviceWaitlistActionClient
 		});
 	});
 
+export const getWaitlistByUrlAlias = actionClient
+	.schema(z.object({ urlAlias: z.string() }))
+	.action(async ({ parsedInput: { urlAlias }, ctx: { apiClient } }) => {
+		return await apiClient.waitlistsApi.getWaitlistByUrlAlias({
+			urlAlias,
+		});
+	});
+
 export const genNewJWT = serviceWaitlistActionClient
 	.schema(
 		z.object({
@@ -58,12 +70,25 @@ export const genNewJWT = serviceWaitlistActionClient
 		}
 	);
 
+export const isUrlAliasAvailable = actionClient
+	.schema(
+		z.object({
+			urlAlias: z.string(),
+		})
+	)
+	.action(async ({ parsedInput: { urlAlias }, ctx: { apiClient } }) => {
+		return await apiClient.waitlistsApi.checkUrlAliasAvailable({
+			urlAlias,
+		});
+	});
+
 export const createWaitlist = actionClient
 	.schema(
 		z.object({
 			waitlist: z.object({
 				name: z.string(),
 				accountId: z.string().uuid(),
+				urlAlias: z.string(),
 			}),
 		})
 	)
@@ -81,6 +106,7 @@ export const updateWaitlist = serviceWaitlistActionClient
 			waitlistId: z.string().uuid(),
 			waitlist: z.object({
 				name: z.string(),
+				urlAlias: z.string(),
 			}),
 		})
 	)
@@ -95,14 +121,14 @@ export const updateWaitlist = serviceWaitlistActionClient
 		}
 	);
 
-export const joinWaitlist = actionClient
+export const joinWaitlist = anonWaitlistActionClient
 	.schema(z.object({ waitlistId: z.string().uuid(), email: z.string() }))
 	.action(
 		async ({ parsedInput: { waitlistId, email }, ctx: { apiClient } }) => {
-			return await apiClient.waitlistsApi.addEmailsToWaitlist({
+			return await apiClient.waitlistsApi.addEmailToWaitlist({
 				id: waitlistId,
 				addEmailsInputBody: {
-					emails: email,
+					email: email,
 				},
 			});
 		}

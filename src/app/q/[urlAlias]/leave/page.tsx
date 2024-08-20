@@ -1,4 +1,4 @@
-import { getWaitlistById } from "@/actions/waitlist";
+import { getWaitlistByUrlAlias } from "@/actions/waitlist";
 import { LeaveWaitlistForm } from "@/components/app/waitlist/leave-waitlist-form";
 import {
   Card,
@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/card"
 import { notFound } from "next/navigation";
 
-export default async function UnsubscribePage({ params, searchParams }: { params: { id: string }, searchParams: { ee: string } }) {
-  const resp = await getWaitlistById({ waitlistId: params.id })
+export default async function UnsubscribePage({ params, searchParams }: { params: { alias: string }, searchParams: { ee: string } }) {
+  const resp = await getWaitlistByUrlAlias({ urlAlias: params.alias })
 
   if (!resp?.data) {
     if (resp?.serverError) {
@@ -20,7 +20,7 @@ export default async function UnsubscribePage({ params, searchParams }: { params
     notFound()
   }
 
-  const waitlist = resp.data?.waitlist
+  const waitlist = resp.data?.publicWaitlist
 
   if (!waitlist || waitlist.deletedAt != null) {
     notFound()

@@ -31,6 +31,12 @@ export interface CreateWaitlistFieldsStruct {
      * @memberof CreateWaitlistFieldsStruct
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateWaitlistFieldsStruct
+     */
+    urlAlias: string;
 }
 
 /**
@@ -39,6 +45,7 @@ export interface CreateWaitlistFieldsStruct {
 export function instanceOfCreateWaitlistFieldsStruct(value: object): value is CreateWaitlistFieldsStruct {
     if (!('accountId' in value) || value['accountId'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('urlAlias' in value) || value['urlAlias'] === undefined) return false;
     return true;
 }
 
@@ -54,6 +61,7 @@ export function CreateWaitlistFieldsStructFromJSONTyped(json: any, ignoreDiscrim
         
         'accountId': json['accountId'],
         'name': json['name'],
+        'urlAlias': json['urlAlias'],
     };
 }
 
@@ -65,6 +73,7 @@ export function CreateWaitlistFieldsStructToJSON(value?: CreateWaitlistFieldsStr
         
         'accountId': value['accountId'],
         'name': value['name'],
+        'urlAlias': value['urlAlias'],
     };
 }
 

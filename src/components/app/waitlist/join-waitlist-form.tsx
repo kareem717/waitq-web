@@ -43,8 +43,8 @@ export const JoinWaitlistForm: FC<JoinWaitlistFormProps> = ({ className, onSucce
 
   const { executeAsync } = useAction(joinWaitlist, {
     onSuccess: () => {
-      toast.success("Done!", {
-        description: "Your waitlist has been updated.",
+      toast.success("You're in!", {
+        description: "You've been added to the waitlist.",
       })
       onSuccess?.()
     },

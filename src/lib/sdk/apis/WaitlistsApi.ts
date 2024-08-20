@@ -25,7 +25,9 @@ import type {
   GetWaitlistAnalyticsOutputBody,
   GetWaitlistByAccountIDInputBody,
   GetWaitlistByAccountIDOutputBody,
+  GetWaitlistByURLAliasOutputBody,
   MessageOutputBody,
+  URLAliasAvailableOutputBody,
   UnsubscribeEmailInputBody,
   UnsubscribeEmailOutputBody,
   UpdateWaitlistInputBody,
@@ -53,8 +55,12 @@ import {
     GetWaitlistByAccountIDInputBodyToJSON,
     GetWaitlistByAccountIDOutputBodyFromJSON,
     GetWaitlistByAccountIDOutputBodyToJSON,
+    GetWaitlistByURLAliasOutputBodyFromJSON,
+    GetWaitlistByURLAliasOutputBodyToJSON,
     MessageOutputBodyFromJSON,
     MessageOutputBodyToJSON,
+    URLAliasAvailableOutputBodyFromJSON,
+    URLAliasAvailableOutputBodyToJSON,
     UnsubscribeEmailInputBodyFromJSON,
     UnsubscribeEmailInputBodyToJSON,
     UnsubscribeEmailOutputBodyFromJSON,
@@ -67,9 +73,13 @@ import {
     WaitlistWithMessageBodyToJSON,
 } from '../models/index';
 
-export interface AddEmailsToWaitlistRequest {
+export interface AddEmailToWaitlistRequest {
     id: string;
     addEmailsInputBody: Omit<AddEmailsInputBody, '$schema'>;
+}
+
+export interface CheckUrlAliasAvailableRequest {
+    urlAlias: string;
 }
 
 export interface CreateWaitlistRequest {
@@ -116,6 +126,10 @@ export interface GetWaitlistByIdRequest {
     id: string;
 }
 
+export interface GetWaitlistByUrlAliasRequest {
+    urlAlias: string;
+}
+
 export interface GetWaitlistsByAccountIdRequest {
     accountId: string;
     getWaitlistByAccountIDInputBody: Omit<GetWaitlistByAccountIDInputBody, '$schema'>;
@@ -140,18 +154,18 @@ export class WaitlistsApi extends runtime.BaseAPI {
      * Add emails to a waitlist.
      * Add emails to a waitlist
      */
-    async addEmailsToWaitlistRaw(requestParameters: AddEmailsToWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AddEmailsOutputBody>> {
+    async addEmailToWaitlistRaw(requestParameters: AddEmailToWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AddEmailsOutputBody>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling addEmailsToWaitlist().'
+                'Required parameter "id" was null or undefined when calling addEmailToWaitlist().'
             );
         }
 
         if (requestParameters['addEmailsInputBody'] == null) {
             throw new runtime.RequiredError(
                 'addEmailsInputBody',
-                'Required parameter "addEmailsInputBody" was null or undefined when calling addEmailsToWaitlist().'
+                'Required parameter "addEmailsInputBody" was null or undefined when calling addEmailToWaitlist().'
             );
         }
 
@@ -161,16 +175,8 @@ export class WaitlistsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
-            path: `/waitlists/{id}/emails/create`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/waitlists/{id}/emails/add`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -184,8 +190,51 @@ export class WaitlistsApi extends runtime.BaseAPI {
      * Add emails to a waitlist.
      * Add emails to a waitlist
      */
-    async addEmailsToWaitlist(requestParameters: AddEmailsToWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AddEmailsOutputBody> {
-        const response = await this.addEmailsToWaitlistRaw(requestParameters, initOverrides);
+    async addEmailToWaitlist(requestParameters: AddEmailToWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AddEmailsOutputBody> {
+        const response = await this.addEmailToWaitlistRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Check if a URL alias is available.
+     * Check if a URL alias is available
+     */
+    async checkUrlAliasAvailableRaw(requestParameters: CheckUrlAliasAvailableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<URLAliasAvailableOutputBody>> {
+        if (requestParameters['urlAlias'] == null) {
+            throw new runtime.RequiredError(
+                'urlAlias',
+                'Required parameter "urlAlias" was null or undefined when calling checkUrlAliasAvailable().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/waitlists/public/{urlAlias}/available`.replace(`{${"urlAlias"}}`, encodeURIComponent(String(requestParameters['urlAlias']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => URLAliasAvailableOutputBodyFromJSON(jsonValue));
+    }
+
+    /**
+     * Check if a URL alias is available.
+     * Check if a URL alias is available
+     */
+    async checkUrlAliasAvailable(requestParameters: CheckUrlAliasAvailableRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<URLAliasAvailableOutputBody> {
+        const response = await this.checkUrlAliasAvailableRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -498,14 +547,6 @@ export class WaitlistsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/waitlists/{id}/emails/unsubscribed`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
@@ -651,6 +692,41 @@ export class WaitlistsApi extends runtime.BaseAPI {
      */
     async getWaitlistById(requestParameters: GetWaitlistByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WaitlistWithMessageBody> {
         const response = await this.getWaitlistByIdRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get a waitlist by URL alias.
+     * Get a waitlist by URL alias
+     */
+    async getWaitlistByUrlAliasRaw(requestParameters: GetWaitlistByUrlAliasRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetWaitlistByURLAliasOutputBody>> {
+        if (requestParameters['urlAlias'] == null) {
+            throw new runtime.RequiredError(
+                'urlAlias',
+                'Required parameter "urlAlias" was null or undefined when calling getWaitlistByUrlAlias().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/waitlists/public/{urlAlias}`.replace(`{${"urlAlias"}}`, encodeURIComponent(String(requestParameters['urlAlias']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetWaitlistByURLAliasOutputBodyFromJSON(jsonValue));
+    }
+
+    /**
+     * Get a waitlist by URL alias.
+     * Get a waitlist by URL alias
+     */
+    async getWaitlistByUrlAlias(requestParameters: GetWaitlistByUrlAliasRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetWaitlistByURLAliasOutputBody> {
+        const response = await this.getWaitlistByUrlAliasRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

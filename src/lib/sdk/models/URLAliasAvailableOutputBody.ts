@@ -16,52 +16,61 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface CancelAccountSubscriptionOutputBody
+ * @interface URLAliasAvailableOutputBody
  */
-export interface CancelAccountSubscriptionOutputBody {
+export interface URLAliasAvailableOutputBody {
     /**
      * A URL to the JSON Schema for this object.
      * @type {string}
-     * @memberof CancelAccountSubscriptionOutputBody
+     * @memberof URLAliasAvailableOutputBody
      */
     readonly $schema?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof URLAliasAvailableOutputBody
+     */
+    available: boolean;
+    /**
+     * 
      * @type {string}
-     * @memberof CancelAccountSubscriptionOutputBody
+     * @memberof URLAliasAvailableOutputBody
      */
     message: string;
 }
 
 /**
- * Check if a given object implements the CancelAccountSubscriptionOutputBody interface.
+ * Check if a given object implements the URLAliasAvailableOutputBody interface.
  */
-export function instanceOfCancelAccountSubscriptionOutputBody(value: object): value is CancelAccountSubscriptionOutputBody {
+export function instanceOfURLAliasAvailableOutputBody(value: object): value is URLAliasAvailableOutputBody {
+    if (!('available' in value) || value['available'] === undefined) return false;
     if (!('message' in value) || value['message'] === undefined) return false;
     return true;
 }
 
-export function CancelAccountSubscriptionOutputBodyFromJSON(json: any): CancelAccountSubscriptionOutputBody {
-    return CancelAccountSubscriptionOutputBodyFromJSONTyped(json, false);
+export function URLAliasAvailableOutputBodyFromJSON(json: any): URLAliasAvailableOutputBody {
+    return URLAliasAvailableOutputBodyFromJSONTyped(json, false);
 }
 
-export function CancelAccountSubscriptionOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): CancelAccountSubscriptionOutputBody {
+export function URLAliasAvailableOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): URLAliasAvailableOutputBody {
     if (json == null) {
         return json;
     }
     return {
         
         '$schema': json['$schema'] == null ? undefined : json['$schema'],
+        'available': json['available'],
         'message': json['message'],
     };
 }
 
-export function CancelAccountSubscriptionOutputBodyToJSON(value?: Omit<CancelAccountSubscriptionOutputBody, '$schema'> | null): any {
+export function URLAliasAvailableOutputBodyToJSON(value?: Omit<URLAliasAvailableOutputBody, '$schema'> | null): any {
     if (value == null) {
         return value;
     }
     return {
         
+        'available': value['available'],
         'message': value['message'],
     };
 }

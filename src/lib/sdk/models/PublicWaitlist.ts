@@ -16,125 +16,98 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface Waitlist
+ * @interface PublicWaitlist
  */
-export interface Waitlist {
+export interface PublicWaitlist {
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
+     * @memberof PublicWaitlist
      */
     accountId: string;
     /**
      * 
-     * @type {string}
-     * @memberof Waitlist
-     */
-    anonKey: string;
-    /**
-     * 
      * @type {Date}
-     * @memberof Waitlist
+     * @memberof PublicWaitlist
      */
     createdAt: Date;
     /**
      * 
      * @type {Date}
-     * @memberof Waitlist
+     * @memberof PublicWaitlist
      */
     deletedAt: Date | null;
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
+     * @memberof PublicWaitlist
      */
     id: string;
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
-     */
-    jwtSecret: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Waitlist
+     * @memberof PublicWaitlist
      */
     name: string;
     /**
      * 
-     * @type {string}
-     * @memberof Waitlist
-     */
-    serviceKey: string;
-    /**
-     * 
      * @type {Date}
-     * @memberof Waitlist
+     * @memberof PublicWaitlist
      */
     updatedAt: Date | null;
     /**
      * 
      * @type {string}
-     * @memberof Waitlist
+     * @memberof PublicWaitlist
      */
     urlAlias: string;
 }
 
 /**
- * Check if a given object implements the Waitlist interface.
+ * Check if a given object implements the PublicWaitlist interface.
  */
-export function instanceOfWaitlist(value: object): value is Waitlist {
+export function instanceOfPublicWaitlist(value: object): value is PublicWaitlist {
     if (!('accountId' in value) || value['accountId'] === undefined) return false;
-    if (!('anonKey' in value) || value['anonKey'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('deletedAt' in value) || value['deletedAt'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
-    if (!('jwtSecret' in value) || value['jwtSecret'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('serviceKey' in value) || value['serviceKey'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     if (!('urlAlias' in value) || value['urlAlias'] === undefined) return false;
     return true;
 }
 
-export function WaitlistFromJSON(json: any): Waitlist {
-    return WaitlistFromJSONTyped(json, false);
+export function PublicWaitlistFromJSON(json: any): PublicWaitlist {
+    return PublicWaitlistFromJSONTyped(json, false);
 }
 
-export function WaitlistFromJSONTyped(json: any, ignoreDiscriminator: boolean): Waitlist {
+export function PublicWaitlistFromJSONTyped(json: any, ignoreDiscriminator: boolean): PublicWaitlist {
     if (json == null) {
         return json;
     }
     return {
         
         'accountId': json['accountId'],
-        'anonKey': json['anonKey'],
         'createdAt': (new Date(json['createdAt'])),
         'deletedAt': (json['deletedAt'] == null ? null : new Date(json['deletedAt'])),
         'id': json['id'],
-        'jwtSecret': json['jwtSecret'],
         'name': json['name'],
-        'serviceKey': json['serviceKey'],
         'updatedAt': (json['updatedAt'] == null ? null : new Date(json['updatedAt'])),
         'urlAlias': json['urlAlias'],
     };
 }
 
-export function WaitlistToJSON(value?: Waitlist | null): any {
+export function PublicWaitlistToJSON(value?: PublicWaitlist | null): any {
     if (value == null) {
         return value;
     }
     return {
         
         'accountId': value['accountId'],
-        'anonKey': value['anonKey'],
         'createdAt': ((value['createdAt']).toISOString()),
         'deletedAt': (value['deletedAt'] == null ? null : (value['deletedAt'] as any).toISOString()),
         'id': value['id'],
-        'jwtSecret': value['jwtSecret'],
         'name': value['name'],
-        'serviceKey': value['serviceKey'],
         'updatedAt': (value['updatedAt'] == null ? null : (value['updatedAt'] as any).toISOString()),
         'urlAlias': value['urlAlias'],
     };

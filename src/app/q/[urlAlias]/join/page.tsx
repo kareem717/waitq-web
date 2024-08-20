@@ -1,4 +1,4 @@
-import { getWaitlistById } from "@/actions/waitlist";
+import { getWaitlistByUrlAlias } from "@/actions/waitlist";
 import { JoinWaitlistForm } from "@/components/app/waitlist/join-waitlist-form";
 import {
   Card,
@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/card"
 import { notFound } from "next/navigation";
 
-export default async function JoinQueuePage({ params }: { params: { id: string } }) {
-  const resp = await getWaitlistById({ waitlistId: params.id })
+export default async function JoinQueuePage({ params }: { params: { urlAlias: string } }) {
+  const resp = await getWaitlistByUrlAlias({ urlAlias: params.urlAlias })
 
   if (!resp?.data) {
     if (resp?.serverError) {
@@ -19,7 +19,7 @@ export default async function JoinQueuePage({ params }: { params: { id: string }
     notFound()
   }
 
-  const waitlist = resp.data?.waitlist
+  const waitlist = resp.data?.publicWaitlist
 
   if (!waitlist || waitlist.deletedAt != null) {
     notFound()
