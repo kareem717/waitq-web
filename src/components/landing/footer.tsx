@@ -11,8 +11,8 @@ export const LandingFooter: FC<LandingFooterProps> = ({ className, ...props }) =
   const { footerGroups } = landingConfig;
 
   return (
-    <footer className={cn("container py-24 sm:py-32", className)} {...props}>
-      <div className="p-10 bg-card border border-secondary rounded-2xl">
+    <footer className={cn("container py-24 sm:py-32 shadow-sm dark:shadow-inner", className)} {...props}>
+      <div className="p-10 bg-card border rounded-2xl">
         <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-x-12 gap-y-8">
           <div className="col-span-full xl:col-span-2">
             <LogoDiv />
