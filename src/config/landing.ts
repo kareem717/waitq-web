@@ -267,7 +267,11 @@ const landingConfig = {
 		},
 	],
 	socials,
-	footerGroups,
+	footer: {
+		groups: footerGroups,
+		privacy: "#",
+		terms: "#",
+	},
 	hero: {
 		update: "Design is out now!",
 		title: {

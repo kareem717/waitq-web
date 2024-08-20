@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export interface LandingFooterProps extends ComponentPropsWithoutRef<"footer"> { };
 
 export const LandingFooter: FC<LandingFooterProps> = ({ className, ...props }) => {
-  const { footerGroups } = landingConfig;
+  const { groups, privacy, terms } = landingConfig.footer;
 
   return (
     <footer className={cn("container py-24 sm:py-32 shadow-sm dark:shadow-inner", className)} {...props}>
@@ -17,7 +17,7 @@ export const LandingFooter: FC<LandingFooterProps> = ({ className, ...props }) =
           <div className="col-span-full xl:col-span-2">
             <LogoDiv />
           </div>
-          {footerGroups.map((group, index) => (
+          {groups.map((group, index) => (
             <div className="flex flex-col gap-2" key={index}>
               <h3 className="font-bold text-lg">{group.label}</h3>
               {group.items.map((item, index) => (
@@ -31,12 +31,15 @@ export const LandingFooter: FC<LandingFooterProps> = ({ className, ...props }) =
             </div>
           ))}
         </div>
-
         <Separator className="my-6" />
-        <section className="">
+        <section className="flex flex-row items-center justify-between">
           <h3>
             &copy; 2024 <span className="font-bold text-primary">Yakubu LLC</span>
           </h3>
+          <div className="flex gap-4 text-sm text-muted-foreground">
+            <Link href={privacy} className="hover:underline">Privacy Policy</Link>
+            <Link href={terms} className="hover:underline">Terms of Service</Link>
+          </div>
         </section>
       </div>
     </footer>
