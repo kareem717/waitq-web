@@ -291,8 +291,8 @@ const landingConfig = {
 		},
 		image: {
 			src: {
-				light: "/hero-image-light.jpeg",
-				dark: "/hero-image-dark.jpeg",
+				light: "/dash.png",
+				dark: "/dash.png",
 			},
 			alt: "Hero Image",
 		},
