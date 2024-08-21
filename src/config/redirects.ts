@@ -25,9 +25,9 @@ const RedirectConfig = {
 		},
 	},
 	queue: {
-		join: "/queue/:urlAlias/join",
+		join: "/queue/:id/join",
 		index: "/queue",
-		leave: "/queue/:urlAlias/leave",
+		leave: "/queue/:id/leave",
 	},
 };
 

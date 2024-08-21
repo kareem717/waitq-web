@@ -70,6 +70,33 @@ export const actionClient = createSafeActionClient({
 	});
 });
 
+export const machineClient = createSafeActionClient({
+	handleReturnedServerError: async (error) => {
+		if (error instanceof ResponseError) {
+			console.error(error.cause);
+			try {
+				const resp = (await error.response.json()) as ErrorModel;
+
+				return resp.detail;
+			} catch (e) {
+				console.error(e);
+				return DEFAULT_SERVER_ERROR_MESSAGE;
+			}
+		}
+
+		return DEFAULT_SERVER_ERROR_MESSAGE;
+	},
+	handleServerErrorLog: (error) => {
+		console.error(error.message);
+	},
+}).use(async ({ next }) => {
+	return next({
+		ctx: {
+			apiClient: apiClient(),
+		},
+	});
+});
+
 export const anonWaitlistActionClient = actionClient.use(
 	async ({ next, clientInput, ctx }) => {
 		// Ensure clientInput is an object

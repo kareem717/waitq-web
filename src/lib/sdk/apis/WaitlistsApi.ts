@@ -21,6 +21,8 @@ import type {
   ErrorModel,
   GetEmailsByWaitlistIDInputBody,
   GetEmailsByWaitlistIDOutputBody,
+  GetPublicManyWaitlistsInputBody,
+  GetPublicManyWaitlistsOutputBody,
   GetUnsubscribedEmailJWTOutputBody,
   GetWaitlistAnalyticsOutputBody,
   GetWaitlistByAccountIDInputBody,
@@ -47,6 +49,10 @@ import {
     GetEmailsByWaitlistIDInputBodyToJSON,
     GetEmailsByWaitlistIDOutputBodyFromJSON,
     GetEmailsByWaitlistIDOutputBodyToJSON,
+    GetPublicManyWaitlistsInputBodyFromJSON,
+    GetPublicManyWaitlistsInputBodyToJSON,
+    GetPublicManyWaitlistsOutputBodyFromJSON,
+    GetPublicManyWaitlistsOutputBodyToJSON,
     GetUnsubscribedEmailJWTOutputBodyFromJSON,
     GetUnsubscribedEmailJWTOutputBodyToJSON,
     GetWaitlistAnalyticsOutputBodyFromJSON,
@@ -107,6 +113,10 @@ export interface GenerateNewWaitlistJwtSecretRequest {
 export interface GetEmailsInWaitlistRequest {
     id: string;
     getEmailsByWaitlistIDInputBody: Omit<GetEmailsByWaitlistIDInputBody, '$schema'>;
+}
+
+export interface GetPublicWaitlistMainPageRequest {
+    getPublicManyWaitlistsInputBody: Omit<GetPublicManyWaitlistsInputBody, '$schema'>;
 }
 
 export interface GetUnsubscribedEmailJwtRequest {
@@ -524,6 +534,44 @@ export class WaitlistsApi extends runtime.BaseAPI {
      */
     async getEmailsInWaitlist(requestParameters: GetEmailsInWaitlistRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetEmailsByWaitlistIDOutputBody> {
         const response = await this.getEmailsInWaitlistRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get SEO sitemap data.
+     * Get many public waitlists
+     */
+    async getPublicWaitlistMainPageRaw(requestParameters: GetPublicWaitlistMainPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetPublicManyWaitlistsOutputBody>> {
+        if (requestParameters['getPublicManyWaitlistsInputBody'] == null) {
+            throw new runtime.RequiredError(
+                'getPublicManyWaitlistsInputBody',
+                'Required parameter "getPublicManyWaitlistsInputBody" was null or undefined when calling getPublicWaitlistMainPage().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/waitlists/public`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: GetPublicManyWaitlistsInputBodyToJSON(requestParameters['getPublicManyWaitlistsInputBody']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetPublicManyWaitlistsOutputBodyFromJSON(jsonValue));
+    }
+
+    /**
+     * Get SEO sitemap data.
+     * Get many public waitlists
+     */
+    async getPublicWaitlistMainPage(requestParameters: GetPublicWaitlistMainPageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetPublicManyWaitlistsOutputBody> {
+        const response = await this.getPublicWaitlistMainPageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

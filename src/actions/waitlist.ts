@@ -3,6 +3,7 @@
 import {
 	actionClient,
 	anonWaitlistActionClient,
+	machineClient,
 	serviceWaitlistActionClient,
 } from "@/lib/safe-action";
 import { z } from "zod";
@@ -171,5 +172,17 @@ export const deleteWaitlist = serviceWaitlistActionClient
 	.action(async ({ parsedInput: { waitlistId }, ctx: { apiClient } }) => {
 		return await apiClient.waitlistsApi.deleteWaitlist({
 			id: waitlistId,
+		});
+	});
+
+export const getWaitlistSitemapData = machineClient
+	.schema(z.object({ cursor: z.string().uuid().optional() }))
+	.action(async ({ parsedInput: { cursor }, ctx: { apiClient } }) => {
+		return await apiClient.waitlistsApi.getPublicWaitlistMainPage({
+			getPublicManyWaitlistsInputBody: {
+				cursor,
+				includeDeleted: false,
+				pageSize: 25000,
+			},
 		});
 	});
