@@ -27,7 +27,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  //TODO: Fix this
   cookies().getAll(); // Ensure this is within the async context
 
   const resp = await getUser();
