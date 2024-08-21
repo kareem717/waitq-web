@@ -6,7 +6,7 @@ import { Benefits } from "@/components/landing/benefits"
 import { Features } from "@/components/landing/features"
 import { Services } from "@/components/landing/services"
 import { Pricing } from "@/components/landing/pricing"
-
+import Image from "next/image"
 export default async function HomePage() {
   return (
     <>

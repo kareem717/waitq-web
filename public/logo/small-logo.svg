@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 437.7 322.5">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: Geist-Bold, Geist;
+        font-size: 300px;
+        font-variation-settings: 'wght' 700;
+        font-weight: 700;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .cls-2 {
+          fill: #f2f2f2; /* Light color for dark mode */
+        }
+        .cls-3 {
+          fill: #e11d48; /* Light color for dark mode */
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        .cls-2 {
+          fill: #09090b; /* Dark color for light mode */
+        }
+        .cls-3 {
+          fill: #e11d48; /* Dark color for light mode */
+        }
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer_1">
+    <text class="cls-1" transform="translate(0 256.5)"><tspan class="cls-2" x="0" y="0">w</tspan><tspan class="cls-3" x="246.9" y="0">q</tspan></text>
+  </g>
+</svg>
