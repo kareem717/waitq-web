@@ -24,6 +24,11 @@ const RedirectConfig = {
 			emails: "/waitlist/:id/emails",
 		},
 	},
+	queue: {
+		join: "/queue/:urlAlias/join",
+		index: "/queue",
+		leave: "/queue/:urlAlias/leave",
+	},
 };
 
 export default RedirectConfig;

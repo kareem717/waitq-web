@@ -21,8 +21,9 @@ import { toast } from "sonner";
 import { createWaitlist, isUrlAliasAvailable } from "@/actions/waitlist";
 import { useAuth } from "@/components/providers/auth-provider";
 import { useAction } from "next-safe-action/hooks";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { env } from "@/env";
+import redirects from "@/config/redirects";
 
 export interface CreateWaitlistFormProps extends ComponentPropsWithoutRef<'form'> {
   onSuccess?: () => void
@@ -40,7 +41,7 @@ export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onS
   const [isLoading, setIsLoading] = useState(false)
   const { account } = useAuth()
   const router = useRouter()
-  
+
   if (!account) throw Error("Account not found")
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -160,7 +161,7 @@ export const CreateWaitlistForm: FC<CreateWaitlistFormProps> = ({ className, onS
                 }} />
               </FormControl>
               <FormDescription>
-                Your users will be able to access the waitlist at <code>{env.NEXT_PUBLIC_APP_URL}/q/{field.value}</code>
+                Your users will be able to access the waitlist at <code>{env.NEXT_PUBLIC_APP_URL}{redirects.queue.index}/{field.value}</code>
               </FormDescription>
               <FormMessage />
             </FormItem>
