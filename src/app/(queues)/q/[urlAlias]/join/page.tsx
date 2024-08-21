@@ -7,10 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
-export default async function JoinQueuePage({ params }: { params: { urlAlias: string } }) {
-  const resp = await getWaitlistByUrlAlias({ urlAlias: params.urlAlias })
+const getWaitlist = cache(async (urlAlias: string) => {
+  const resp = await getWaitlistByUrlAlias({ urlAlias: urlAlias })
 
   if (!resp?.data) {
     if (resp?.serverError) {
@@ -24,6 +26,21 @@ export default async function JoinQueuePage({ params }: { params: { urlAlias: st
   if (!waitlist || waitlist.deletedAt != null) {
     notFound()
   }
+
+  return waitlist
+})
+
+export async function generateMetadata({ params }: { params: { urlAlias: string } }): Promise<Metadata> {
+  const waitlist = await getWaitlist(params.urlAlias)
+
+  return {
+    title: `${waitlist.name} - Join Waitlist`,
+    description: `Join the waitlist for ${waitlist.name}.`,
+  }
+}
+
+export default async function JoinQueuePage({ params }: { params: { urlAlias: string } }) {
+  const waitlist = await getWaitlist(params.urlAlias)
 
   return (
     <main className="flex flex-col items-center justify-center h-full w-full">

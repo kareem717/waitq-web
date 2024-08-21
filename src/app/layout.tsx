@@ -8,17 +8,12 @@ import AuthProvider from "@/components/providers/auth-provider";
 import { getLoggedInAccount, getUser } from "@/actions/auth";
 import { getSubscriptionByAccountId } from "@/actions/subscription";
 import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: {
     default: "waitq",
-    template: "%s - waitq",
+    template: "%s | waitq",
   },
   description: "Create and manage waitlists for your products.",
   keywords: ["waitlist", "waitlists", "email", "email list", "waitq", "waitq.sh", "landing page", "launch"],
@@ -32,6 +27,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  //TODO: Fix this
+  cookies().getAll(); // Ensure this is within the async context
+
   const resp = await getUser();
   const user = resp?.data;
 
@@ -57,7 +55,7 @@ export default async function RootLayout({
       <body
         className="h-screen w-screen bg-background antialiased"
       >
-        <AuthProvider user={user || undefined} account={account} subscription={subscription}>
+        <AuthProvider user={user ?? undefined} account={account} subscription={subscription}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

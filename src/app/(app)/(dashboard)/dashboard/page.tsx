@@ -13,8 +13,12 @@ import {
 import redirects from "@/config/redirects"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { cookies } from "next/headers";
 
 export default async function DashboardPage({ searchParams }: { searchParams: { page: string | null, limit: string | null } }) {
+  //TODO: Fix this
+cookies().getAll();
+
   const page = searchParams.page ? parseInt(searchParams.page) : 1
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10
 

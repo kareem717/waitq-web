@@ -51,7 +51,7 @@ export const actionClient = createSafeActionClient({
 	handleServerErrorLog: (error) => {
 		console.error(error.message);
 	},
-}).use(async ({ next, clientInput, metadata }) => {
+}).use(async ({ next }) => {
 	const sb = supabase();
 
 	const {
@@ -71,7 +71,7 @@ export const actionClient = createSafeActionClient({
 });
 
 export const anonWaitlistActionClient = actionClient.use(
-	async ({ next, clientInput, metadata, ctx }) => {
+	async ({ next, clientInput, ctx }) => {
 		// Ensure clientInput is an object
 		if (typeof clientInput !== "object" || clientInput === null) {
 			throw new ActionError("Invalid client input", 400);
@@ -95,7 +95,7 @@ export const anonWaitlistActionClient = actionClient.use(
 );
 
 export const serviceWaitlistActionClient = actionClient.use(
-	async ({ next, clientInput, metadata, ctx }) => {
+	async ({ next, clientInput, ctx }) => {
 		// Ensure clientInput is an object
 		if (typeof clientInput !== "object" || clientInput === null) {
 			throw new ActionError("Invalid client input", 400);

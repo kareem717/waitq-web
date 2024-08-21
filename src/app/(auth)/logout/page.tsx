@@ -1,16 +1,15 @@
-"use client";
-
+import { getUser } from "@/actions/auth";
 import { LogoutForm } from "@/components/auth/logout-form";
-import { useAuth } from "@/components/providers/auth-provider";
-import { useRouter } from "next/navigation";
 import redirects from "@/config/redirects";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+export default async function LogoutPage() {
+  //TODO: Fix this
+cookies().getAll();
 
-export default function LogoutPage() {
-  const router = useRouter();
-  const { user } = useAuth();
-
-  if (!user) {
-    router.push(redirects.auth.login);
+  const userResp = await getUser();
+  if (userResp?.data) {
+    redirect(redirects.auth.login);
   }
 
   return (

@@ -2,8 +2,12 @@ import { CreateAccountForm } from "@/components/app/account/create-account-form"
 import { getLoggedInAccount, getUser } from "@/actions/auth";
 import redirects from "@/config/redirects";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export default async function CreateAccountPage() {
+  //TODO: Fix this
+cookies().getAll();
+
 	const userResp = await getUser();
 
 	if (userResp?.data) {

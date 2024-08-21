@@ -7,20 +7,40 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
-export default async function UnsubscribePage({ params, searchParams }: { params: { alias: string }, searchParams: { ee: string } }) {
-  const resp = await getWaitlistByUrlAlias({ urlAlias: params.alias })
+const getWaitlist = cache(async (urlAlias: string) => {
+  const resp = await getWaitlistByUrlAlias({ urlAlias: urlAlias })
 
   if (!resp?.data) {
     if (resp?.serverError) {
       throw new Error(resp.serverError)
     }
-
     notFound()
   }
 
   const waitlist = resp.data?.publicWaitlist
+
+  if (!waitlist || waitlist.deletedAt != null) {
+    notFound()
+  }
+
+  return waitlist
+})
+
+export async function generateMetadata({ params }: { params: { urlAlias: string } }): Promise<Metadata> {
+  const waitlist = await getWaitlist(params.urlAlias)
+
+  return {
+    title: `${waitlist.name} - Leave Waitlist`,
+    description: `Leave the waitlist for ${waitlist.name}.`,
+  }
+}
+
+export default async function UnsubscribePage({ params, searchParams }: { params: { alias: string }, searchParams: { ee: string } }) {
+  const waitlist = await getWaitlist(params.alias)
 
   if (!waitlist || waitlist.deletedAt != null) {
     notFound()
