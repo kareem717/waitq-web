@@ -18,14 +18,15 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const page = searchParams.page ? parseInt(searchParams.page) : 1
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10
 
-  const account = await getLoggedInAccount()
-  const accountId = account?.data?.accounts[0].id
-  if (!accountId) {
+  const accountResponse = await getLoggedInAccount()
+  const account = accountResponse?.data?.accounts[0]
+  
+  if (!account) {
     throw new Error("No account found")
   }
 
   const waitlistResp = await getWaitlistByAccountId({
-    accountId,
+    accountId: account.id,
     paginationParams: {
       page,
       pageSize: limit + 1,

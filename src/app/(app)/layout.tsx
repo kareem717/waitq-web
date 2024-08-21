@@ -10,6 +10,7 @@ export default async function AppLayout({
   const resp = await getLoggedInAccount();
   const account = resp?.data?.accounts[0];
 
+  console.log(account);
   if (!account) {
     redirect(redirects.auth.login);
   }

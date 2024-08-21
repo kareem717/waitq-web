@@ -20,7 +20,13 @@ export async function GET(request: Request) {
 			`${env.NEXT_PUBLIC_APP_URL}/auth/error?error=${errMsg}`
 		);
 	} else if (code) {
-		await supabase().auth.exchangeCodeForSession(code);
+		try {
+			await supabase().auth.exchangeCodeForSession(code);
+		} catch (error) {
+			return NextResponse.redirect(
+				`${env.NEXT_PUBLIC_APP_URL}/auth/error?error=An+error+occurred+while+authenticating`
+			);
+		}
 	}
 
 	// URL to redirect to after sign up process completes

@@ -1,22 +1,18 @@
-"use client";
-
 import { CreateAccountForm } from "@/components/app/account/create-account-form";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/components/providers/auth-provider";
+import { getLoggedInAccount, getUser } from "@/actions/auth";
 import redirects from "@/config/redirects";
+import { redirect } from "next/navigation";
 
-export default function CreateAccountPage() {
-	const router = useRouter();
-	const { user, account } = useAuth();
+export default async function CreateAccountPage() {
+	const userResp = await getUser();
 
-	if (user) {
-		if (account) {
-			router.push(redirects.auth.afterLogin);
+	if (userResp?.data) {
+		const accountResp = await getLoggedInAccount();
+		if (accountResp?.data?.accounts[0]) {
+			redirect(redirects.auth.afterLogin);
 		} else {
-			router.push(redirects.auth.createAccount);
+			redirect(redirects.auth.createAccount);
 		}
-	} else {
-		router.push(redirects.auth.login);
 	}
 
 	return (
