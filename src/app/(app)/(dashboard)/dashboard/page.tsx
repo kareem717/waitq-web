@@ -21,6 +21,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const accountResponse = await getLoggedInAccount()
   const account = accountResponse?.data
 
+  console.log(account)
+
   if (!account) {
     throw new Error("No account found")
   }

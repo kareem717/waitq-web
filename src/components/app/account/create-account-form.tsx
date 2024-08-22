@@ -32,6 +32,8 @@ export const CreateAccountForm = () => {
 	const { user } = useAuth();
 	const router = useRouter();
 
+	console.log(user)
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -64,6 +66,11 @@ export const CreateAccountForm = () => {
 			throw new Error("User not found");
 		}
 
+
+		console.log({
+			...values,
+			userId: user.id
+		})
 		await executeAsync({
 			...values,
 			userId: user.id
