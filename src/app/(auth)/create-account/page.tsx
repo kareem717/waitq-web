@@ -2,6 +2,7 @@ import { CreateAccountForm } from "@/components/app/account/create-account-form"
 import redirects from "@/config/redirects";
 import { redirect } from "next/navigation";
 import createClient from "@/lib/utils/supabase/server";
+import { getLoggedInAccount } from "@/actions/auth";
 
 export default async function CreateAccountPage() {
 	const supabase = createClient();
@@ -9,6 +10,13 @@ export default async function CreateAccountPage() {
 
 	if (!user) {
 		return redirect(redirects.auth.login);
+	}
+
+	const accountResp = await getLoggedInAccount()
+	const account = accountResp?.data
+
+	if (account) {
+		return redirect(redirects.auth.afterLogin);
 	}
 
 	return (
