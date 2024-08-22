@@ -1,4 +1,4 @@
-import { getLoggedInAccount } from "@/actions/auth"
+import { getAccountByUserId } from "@/actions/auth"
 import { UpdateAccountForm } from "@/components/app/account/update-account-form"
 import { BillingPortalButton } from "@/components/app/settings/billing"
 import {
@@ -14,12 +14,17 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { cookies } from "next/headers"
+import createClient from "@/lib/utils/supabase/server"
 
 export default async function AccountSettingsPage() {
-  cookies().getAll()
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  const accountResp = await getLoggedInAccount()
+  if (!user) {
+    throw new Error("User not found")
+  }
+
+  const accountResp = await getAccountByUserId({ userId: user.id })
   const account = accountResp?.data
 
   if (!account) {

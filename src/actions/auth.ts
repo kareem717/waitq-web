@@ -1,7 +1,6 @@
 "use server";
 
 import { actionClient } from "@/lib/safe-action";
-import createClient from "@/lib/utils/supabase/server";
 import { z } from "zod";
 
 export const createAccount = actionClient
@@ -44,30 +43,10 @@ export const updateAccount = actionClient
 export const getAccountByUserId = actionClient
 	.schema(z.object({ userId: z.string().uuid() }))
 	.action(async ({ parsedInput: { userId }, ctx: { apiClient } }) => {
-		return await apiClient.accountsApi.getAccountsByUserId({
+		const response = await apiClient.accountsApi.getAccountsByUserId({
 			userId,
 			includeDeleted: false,
 		});
+
+		return response.accounts[0]
 	});
-
-export const getLoggedInAccount = actionClient.action(
-	async ({ ctx: { apiClient } }) => {
-		const supabase = createClient()
-		const { data: { user } } = await supabase.auth.getUser()
-
-		if (!user) {
-			return null;
-		}
-
-		const accounts = await apiClient.accountsApi.getAccountsByUserId({
-			userId: user.id,
-			includeDeleted: false,
-		});
-
-		return accounts.accounts[0];
-	}
-);
-
-export const getUser = actionClient.action(async ({ ctx: { user } }) => {
-	return user;
-});

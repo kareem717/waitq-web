@@ -1,8 +1,8 @@
-import { getLoggedInAccount } from "@/actions/auth";
 import { redirect } from "next/navigation";
 import redirects from "@/config/redirects";
 import AuthProvider from "@/components/providers/auth-provider";
 import createClient from "@/lib/utils/supabase/server";
+import { getAccountByUserId } from "@/actions/auth";
 
 export default async function AppLayout({
   children,
@@ -16,7 +16,7 @@ export default async function AppLayout({
     redirect(redirects.auth.login);
   }
 
-  const accountResp = await getLoggedInAccount();
+  const accountResp = await getAccountByUserId({ userId: user.id });
   const account = accountResp?.data;
 
   if (!account) {

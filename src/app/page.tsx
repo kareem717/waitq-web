@@ -8,24 +8,29 @@ import { Services } from "@/components/landing/services"
 import { Pricing } from "@/components/landing/pricing"
 import Image from "next/image"
 import createClient from "@/lib/utils/supabase/server"
-import { getLoggedInAccount } from "@/actions/auth"
+import { getAccountByUserId } from "@/actions/auth"
 
 
 export default async function HomePage() {
   const supabase = createClient();
 
   const { data: { session } } = await supabase.auth.getSession();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  const accountRes = await getLoggedInAccount();
+  let accountRes;
+  if (user?.id) {
+    accountRes = await getAccountByUserId({ userId: user.id });
+  }
 
+  const res = {
+    session,
+    account: accountRes?.data,
+    user,
+  }
   return (
     <>
       <div className="max-w-md break-words">
-        {session?.access_token}
-        <br />
-        <hr />
-        <br />  
-        {JSON.stringify(accountRes?.data)}
+        {JSON.stringify(res)}
       </div>
       <LandingNav />
       <Hero />

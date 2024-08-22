@@ -1,4 +1,4 @@
-import { getLoggedInAccount } from "@/actions/auth"
+import { getAccountByUserId } from "@/actions/auth"
 import { getWaitlistByAccountId } from "@/actions/waitlist"
 import { WaitlistIndexCard } from "@/components/app/waitlist/index-card"
 import { Icons } from "@/components/icons"
@@ -12,16 +12,22 @@ import {
 } from "@/components/ui/pagination"
 import redirects from "@/config/redirects"
 import { cn } from "@/lib/utils"
+import createClient from "@/lib/utils/supabase/server"
 import Link from "next/link"
 
 export default async function DashboardPage({ searchParams }: { searchParams: { page: string | null, limit: string | null } }) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10
 
-  const accountResponse = await getLoggedInAccount()
-  const account = accountResponse?.data
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  console.log(account)
+  if (!user) {
+    throw new Error("No user found")
+  }
+
+  const accountResponse = await getAccountByUserId({ userId: user.id })
+  const account  = accountResponse?.data
 
   if (!account) {
     throw new Error("No account found")

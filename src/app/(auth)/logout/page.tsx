@@ -1,4 +1,3 @@
-import { getUser } from "@/actions/auth";
 import { LogoutForm } from "@/components/auth/logout-form";
 import redirects from "@/config/redirects";
 import createClient from "@/lib/utils/supabase/server";
