@@ -27,10 +27,11 @@ export default async function HomePage() {
     account: accountRes?.data,
     user,
   }
+
   return (
     <>
       <div className="max-w-md break-words">
-        {JSON.stringify(res)}
+        {JSON.stringify(res, null, 2)}
       </div>
       <LandingNav />
       <Hero />

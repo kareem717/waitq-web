@@ -26,7 +26,7 @@ export default async function CreateAccountPage() {
 				<p className="text-sm text-muted-foreground">Finish setting up your account to get started</p>
 			</div>
 			<div className="mx-auto w-full max-w-[350px]">
-				<CreateAccountForm />
+				<CreateAccountForm user={user} />
 			</div>
 		</div>
 	);
