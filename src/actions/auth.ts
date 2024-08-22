@@ -1,6 +1,7 @@
 "use server";
 
 import { actionClient } from "@/lib/safe-action";
+import createClient from "@/lib/utils/supabase/server";
 import { z } from "zod";
 
 export const createAccount = actionClient
@@ -50,15 +51,16 @@ export const getAccountByUserId = actionClient
 	});
 
 export const getLoggedInAccount = actionClient.action(
-	async ({ ctx: { apiClient, user } }) => {
-		const userId = user?.id;
+	async ({ ctx: { apiClient } }) => {
+		const supabase = createClient()
+		const { data: { user } } = await supabase.auth.getUser()
 
-		if (!userId) {
+		if (!user) {
 			return null;
 		}
 
 		const accounts = await apiClient.accountsApi.getAccountsByUserId({
-			userId,
+			userId: user.id,
 			includeDeleted: false,
 		});
 
