@@ -2,6 +2,12 @@ import { WaitlistAPIKeyDisplay } from "@/components/app/waitlist/settings/key-di
 import { WaitlistJWTDisplay } from "@/components/app/waitlist/settings/jwt-display"
 import { getWaitlistById } from "@/actions/waitlist"
 import { DeleteWaitlistCard } from "@/components/app/waitlist/settings/delete-waitlist"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Settings",
+  description: "View and edit waitlist settings.",
+}
 
 export default async function WaitlistSettings({ params }: { params: { id: string } }) {
   const resp = await getWaitlistById({ waitlistId: params.id })

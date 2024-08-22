@@ -1,6 +1,6 @@
 'use client' // Error components must be Client Components
 
-import { Icons } from '@/components/icons'
+import { SmallLogoDiv } from '@/components/logo-div'
 import { Button, buttonVariants } from '@/components/ui/button'
 import redirects from '@/config/redirects'
 import { cn } from '@/lib/utils'
@@ -21,7 +21,7 @@ export default function Error({
 
   return (
     <div className="flex flex-col items-center gap-4 justify-center h-screen w-full p-4">
-      <Icons.logoSmall className='w-40 h-40' />
+      <SmallLogoDiv />
       <h2 className='text-2xl font-semibold'>{error.message || "Something went wrong!"} </h2>
       <div className='flex gap-4 w-full md:w-1/3 max-w-md min-w-[200px]'>
         <Button

@@ -1,15 +1,15 @@
 import { getUser } from "@/actions/auth";
 import { LogoutForm } from "@/components/auth/logout-form";
 import redirects from "@/config/redirects";
+import createClient from "@/lib/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-export default async function LogoutPage() {
-  //TODO: Fix this
-cookies().getAll();
 
-  const userResp = await getUser();
-  if (userResp?.data) {
-    redirect(redirects.auth.login);
+export default async function LogoutPage() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return redirect(redirects.auth.login);
   }
 
   return (

@@ -18,8 +18,8 @@ export const WaitlistAnalytics: FC<WaitlistAnalyticsProps> = ({ className, data,
   } = data
 
   return (
-    <div className={cn("grid gap-6 md:grid-cols-2 lg:grid-cols-3", className)} {...props}>
-      <Card>
+    <div className={cn("grid gap-6 sm:grid-cols-2 lg:grid-cols-3", className)} {...props}>
+      <Card className="sm:col-span-2 lg:col-span-1">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Active Emails</CardTitle>
         </CardHeader>

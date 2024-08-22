@@ -1,26 +1,31 @@
 import { getLoggedInAccount } from "@/actions/auth";
 import { redirect } from "next/navigation";
 import redirects from "@/config/redirects";
-import { cookies } from "next/headers";
+import AuthProvider from "@/components/providers/auth-provider";
+import createClient from "@/lib/utils/supabase/server";
 
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  //TODO: Fix this
-cookies().getAll();
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  const resp = await getLoggedInAccount();
-  const account = resp?.data?.accounts[0];
-
-  if (!account) {
+  if (!user) {
     redirect(redirects.auth.login);
   }
 
+  const accountResp = await getLoggedInAccount();
+  const account = accountResp?.data?.accounts[0];
+
+  if (!account) {
+    redirect(redirects.auth.createAccount);
+  }
+
   return (
-    <>
+    <AuthProvider user={user ?? undefined} account={account}>
       {children}
-    </>
+    </AuthProvider>
   );
 }

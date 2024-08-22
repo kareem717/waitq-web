@@ -1,22 +1,14 @@
 import { CreateAccountForm } from "@/components/app/account/create-account-form";
-import { getLoggedInAccount, getUser } from "@/actions/auth";
 import redirects from "@/config/redirects";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import createClient from "@/lib/utils/supabase/server";
 
 export default async function CreateAccountPage() {
-  //TODO: Fix this
-cookies().getAll();
+	const supabase = createClient();
+	const { data: { user } } = await supabase.auth.getUser();
 
-	const userResp = await getUser();
-
-	if (userResp?.data) {
-		const accountResp = await getLoggedInAccount();
-		if (accountResp?.data?.accounts[0]) {
-			redirect(redirects.auth.afterLogin);
-		} else {
-			redirect(redirects.auth.createAccount);
-		}
+	if (!user) {
+		return redirect(redirects.auth.login);
 	}
 
 	return (

@@ -1,4 +1,16 @@
-import { type PricingPlan } from "@/components/app/pricing/pricing-cards";
+export type PricingPlanPrice = {
+	amount: number;
+	stripePriceId: string;
+};
+
+export type PricingPlan = {
+	name: string;
+	monthlyPrice: PricingPlanPrice;
+	annualMonthlyPrice: PricingPlanPrice;
+	features: string[];
+	isHighlighted?: boolean;
+	description?: string;
+};
 
 const pricingPlans: PricingPlan[] = [
 	{
@@ -7,9 +19,8 @@ const pricingPlans: PricingPlan[] = [
 			amount: 3.99,
 			stripePriceId: "price_1PpLyhLl5WKFdr0UQROTEK3h",
 		},
-		isDisabled: true,
-		annualPrice: {
-			amount: 29.99,
+		annualMonthlyPrice: {
+			amount: 2.59,
 			stripePriceId: "price_1PpM3BLl5WKFdr0UlOvCrMNH",
 		},
 		features: ["1 User", "10GB Storage", "Basic Support"],
@@ -20,10 +31,11 @@ const pricingPlans: PricingPlan[] = [
 			amount: 6.99,
 			stripePriceId: "price_1Pp2TsLl5WKFdr0Um0X7xFro",
 		},
-		annualPrice: {
-			amount: 59.99,
+		annualMonthlyPrice: {
+			amount: 4.59,
 			stripePriceId: "price_1PpECHLl5WKFdr0UgopMh6h2",
 		},
+		isHighlighted: true,
 		features: [
 			"Everything in Basic",
 			"50GB Storage",
@@ -37,11 +49,10 @@ const pricingPlans: PricingPlan[] = [
 			amount: 11.99,
 			stripePriceId: "price_1Pp2VCLl5WKFdr0Ufchbdtfb",
 		},
-		annualPrice: {
-			amount: 99.99,
+		annualMonthlyPrice: {
+			amount: 7.89,
 			stripePriceId: "price_1PpEC0Ll5WKFdr0UO3v5GUgw",
 		},
-		isHighlighted: true,
 		features: [
 			"Everything in Pro",
 			"500GB Storage",

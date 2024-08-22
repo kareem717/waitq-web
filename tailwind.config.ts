@@ -98,14 +98,22 @@ const config = {
 						backgroundPosition: "-200% 0",
 					},
 				},
+				shine: {
+					from: {
+						backgroundPosition: "0 0",
+					},
+					to: {
+						backgroundPosition: "-200% 0",
+					},
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 				"collapsible-down": "collapsible-down 0.2s ease-out",
-				"background-shine": "background-shine 2s linear infinite",
 				"collapsible-up": "collapsible-up 0.2s ease-out",
 				shake: "shake 0.5s ease-in-out",
+				shine: "shine 2s linear infinite",
 			},
 		},
 	},

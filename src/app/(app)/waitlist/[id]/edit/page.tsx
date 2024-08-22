@@ -7,6 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { getWaitlistById } from "@/actions/waitlist"
+import { Metadata } from "next"
+
+
+export const metadata: Metadata = {
+  title: "Edit",
+  description: "Edit a waitlist to update its settings.",
+}
 
 export default async function UpdateWaitlistPage({ params }: { params: { id: string } }) {
   const resp = await getWaitlistById({ waitlistId: params.id })

@@ -321,6 +321,7 @@ const landingConfig = {
 		subtitle: "Get unlimitted access",
 		description:
 			"Lorem ipsum dolor sit amet consectetur adipisicing elit. A odio velit cum aliquam. Natus consectetur dolores.",
+		yearlyInsentive: "MORE THAN 33% OFF",
 	},
 	services: {
 		title: "Services",

@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google"
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import AuthProvider from "@/components/providers/auth-provider";
-import { getLoggedInAccount, getUser } from "@/actions/auth";
-import { getSubscriptionByAccountId } from "@/actions/subscription";
 import { GeistSans } from 'geist/font/sans';
-import { cookies } from "next/headers";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
   title: {
     default: "waitq",
     template: "%s | waitq",
@@ -27,44 +23,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  cookies().getAll(); // Ensure this is within the async context
-
-  const resp = await getUser();
-  const user = resp?.data;
-
-  let subscription
-
-  const accountResp = await getLoggedInAccount();
-  const account = accountResp?.data?.accounts[0];
-
-  if (account) {
-    const subscriptionResp = await getSubscriptionByAccountId({
-      accountId: account.id,
-    });
-
-    if (subscriptionResp?.serverError || subscriptionResp?.validationErrors) {
-      throw new Error(subscriptionResp?.serverError || "Something went wrong.");
-    }
-
-    subscription = subscriptionResp?.data?.subscriptionRelationship;
-  }
-
   return (
     <html lang="en" className={GeistSans.className}>
       <body
         className="h-screen w-screen bg-background antialiased"
       >
-        <AuthProvider user={user ?? undefined} account={account} subscription={subscription}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
