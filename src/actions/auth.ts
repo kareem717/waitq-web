@@ -6,17 +6,15 @@ import { z } from "zod";
 export const createAccount = actionClient
 	.schema(
 		z.object({
-			username: z.string().min(3).max(10),
+			name: z.string().min(3).max(10),
+			email: z.string().email(),
 			userId: z.string().uuid(),
 		})
 	)
-	.action(async ({ parsedInput: { username, userId }, ctx: { apiClient } }) => {
+	.action(async ({ parsedInput: account, ctx: { apiClient } }) => {
 		return await apiClient.accountsApi.createAccount({
 			createAccountInputBody: {
-				account: {
-					userId,
-					username,
-				},
+				account,
 			},
 		});
 	});
@@ -26,18 +24,21 @@ export const updateAccount = actionClient
 		z.object({
 			id: z.string().uuid(),
 			fields: z.object({
-				username: z.string().min(3).max(10),
+				email: z.string().email(),
+				name: z.string().min(3).max(10),
 			}),
 		})
 	)
-	.action(async ({ parsedInput: { id, fields }, ctx: { apiClient } }) => {
-		return await apiClient.accountsApi.updateAccount({
-			id,
-			updateAccountInputBody: {
-				account: fields,
-			},
-		});
-	});
+	.action(
+		async ({ parsedInput: { id, fields: account }, ctx: { apiClient } }) => {
+			return await apiClient.accountsApi.updateAccount({
+				id,
+				updateAccountInputBody: {
+					account,
+				},
+			});
+		}
+	);
 
 export const getAccountByUserId = actionClient
 	.schema(z.object({ userId: z.string().uuid() }))
@@ -56,10 +57,12 @@ export const getLoggedInAccount = actionClient.action(
 			return null;
 		}
 
-		return await apiClient.accountsApi.getAccountsByUserId({
+		const accounts = await apiClient.accountsApi.getAccountsByUserId({
 			userId,
 			includeDeleted: false,
 		});
+
+		return accounts.accounts[0];
 	}
 );
 

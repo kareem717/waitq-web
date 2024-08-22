@@ -81,7 +81,7 @@ export const Pricing: FC<PricingProps> = ({ className, ...props }) => {
                   className={cn(buttonVariants({
                     variant: isHighlighted ? "default" : "secondary"
                   }), "w-full")}
-                  href={redirects.app.settings.billing}
+                  href={redirects.app.settings.account}
                 >
                   Get Started
                 </Link>

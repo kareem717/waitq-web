@@ -24,21 +24,28 @@ export interface CreateAccountFieldsStruct {
      * @type {string}
      * @memberof CreateAccountFieldsStruct
      */
-    userId: string;
+    email: string;
     /**
      * 
      * @type {string}
      * @memberof CreateAccountFieldsStruct
      */
-    username: string;
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAccountFieldsStruct
+     */
+    userId: string;
 }
 
 /**
  * Check if a given object implements the CreateAccountFieldsStruct interface.
  */
 export function instanceOfCreateAccountFieldsStruct(value: object): value is CreateAccountFieldsStruct {
+    if (!('email' in value) || value['email'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
     if (!('userId' in value) || value['userId'] === undefined) return false;
-    if (!('username' in value) || value['username'] === undefined) return false;
     return true;
 }
 
@@ -52,8 +59,9 @@ export function CreateAccountFieldsStructFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
+        'email': json['email'],
+        'name': json['name'],
         'userId': json['userId'],
-        'username': json['username'],
     };
 }
 
@@ -63,8 +71,9 @@ export function CreateAccountFieldsStructToJSON(value?: CreateAccountFieldsStruc
     }
     return {
         
+        'email': value['email'],
+        'name': value['name'],
         'userId': value['userId'],
-        'username': value['username'],
     };
 }
 

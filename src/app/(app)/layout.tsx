@@ -17,7 +17,7 @@ export default async function AppLayout({
   }
 
   const accountResp = await getLoggedInAccount();
-  const account = accountResp?.data?.accounts[0];
+  const account = accountResp?.data;
 
   if (!account) {
     redirect(redirects.auth.createAccount);

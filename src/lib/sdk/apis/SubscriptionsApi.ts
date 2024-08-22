@@ -15,97 +15,46 @@
 
 import * as runtime from '../runtime';
 import type {
-  CancelAccountSubscriptionOutputBody,
   ErrorModel,
   GetAccountSubscriptionOutputBody,
+  GetStripeBillingPortalLinkOutputBody,
   GetStripeCheckoutLinkOutputBody,
-  HandleStripeSubscriptionCallbackOutputBody,
-  UpdateAccountSubscriptionOutputBody,
 } from '../models/index';
 import {
-    CancelAccountSubscriptionOutputBodyFromJSON,
-    CancelAccountSubscriptionOutputBodyToJSON,
     ErrorModelFromJSON,
     ErrorModelToJSON,
     GetAccountSubscriptionOutputBodyFromJSON,
     GetAccountSubscriptionOutputBodyToJSON,
+    GetStripeBillingPortalLinkOutputBodyFromJSON,
+    GetStripeBillingPortalLinkOutputBodyToJSON,
     GetStripeCheckoutLinkOutputBodyFromJSON,
     GetStripeCheckoutLinkOutputBodyToJSON,
-    HandleStripeSubscriptionCallbackOutputBodyFromJSON,
-    HandleStripeSubscriptionCallbackOutputBodyToJSON,
-    UpdateAccountSubscriptionOutputBodyFromJSON,
-    UpdateAccountSubscriptionOutputBodyToJSON,
 } from '../models/index';
-
-export interface CancelAccountSubscriptionRequest {
-    accountId: string;
-}
 
 export interface GetAccountSubscriptionRequest {
     accountId: string;
 }
 
-export interface GetStripeCheckoutLinkRequest {
-    priceId: string;
+export interface GetStripeBillingPortalLinkRequest {
+    accountId: string;
     redirectUrl?: string;
 }
 
-export interface HandleStripeSubscriptionCallbackRequest {
-    sessionId?: string;
+export interface GetStripeCheckoutLinkRequest {
+    priceId: string;
+    accountId?: string;
+    redirectUrl?: string;
 }
 
-export interface UpdateAccountSubscriptionRequest {
-    accountId: string;
-    priceId?: string;
+export interface HandleStripeWebhookRequest {
+    body: any | null;
+    stripeSignature?: string;
 }
 
 /**
  * 
  */
 export class SubscriptionsApi extends runtime.BaseAPI {
-
-    /**
-     * Cancel a subscription.
-     * Cancel a subscription
-     */
-    async cancelAccountSubscriptionRaw(requestParameters: CancelAccountSubscriptionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CancelAccountSubscriptionOutputBody>> {
-        if (requestParameters['accountId'] == null) {
-            throw new runtime.RequiredError(
-                'accountId',
-                'Required parameter "accountId" was null or undefined when calling cancelAccountSubscription().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/subscriptions/account/{accountId}`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => CancelAccountSubscriptionOutputBodyFromJSON(jsonValue));
-    }
-
-    /**
-     * Cancel a subscription.
-     * Cancel a subscription
-     */
-    async cancelAccountSubscription(requestParameters: CancelAccountSubscriptionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CancelAccountSubscriptionOutputBody> {
-        const response = await this.cancelAccountSubscriptionRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      * Get a subscription.
@@ -151,6 +100,53 @@ export class SubscriptionsApi extends runtime.BaseAPI {
     }
 
     /**
+     * Get a stripe billing portal link.
+     * Get a stripe billing portal link
+     */
+    async getStripeBillingPortalLinkRaw(requestParameters: GetStripeBillingPortalLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStripeBillingPortalLinkOutputBody>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling getStripeBillingPortalLink().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['redirectUrl'] != null) {
+            queryParameters['redirectUrl'] = requestParameters['redirectUrl'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/subscriptions/billing-portal/{accountId}`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetStripeBillingPortalLinkOutputBodyFromJSON(jsonValue));
+    }
+
+    /**
+     * Get a stripe billing portal link.
+     * Get a stripe billing portal link
+     */
+    async getStripeBillingPortalLink(requestParameters: GetStripeBillingPortalLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStripeBillingPortalLinkOutputBody> {
+        const response = await this.getStripeBillingPortalLinkRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Get a stripe checkout link.
      * Get a stripe checkout link
      */
@@ -163,6 +159,10 @@ export class SubscriptionsApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['accountId'] != null) {
+            queryParameters['accountId'] = requestParameters['accountId'];
+        }
 
         if (requestParameters['redirectUrl'] != null) {
             queryParameters['redirectUrl'] = requestParameters['redirectUrl'];
@@ -198,82 +198,44 @@ export class SubscriptionsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Handle a subscription callback.
-     * Handle a subscription callback
+     * Handle a stripe webhook.
+     * Handle a stripe webhook
      */
-    async handleStripeSubscriptionCallbackRaw(requestParameters: HandleStripeSubscriptionCallbackRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HandleStripeSubscriptionCallbackOutputBody>> {
-        const queryParameters: any = {};
-
-        if (requestParameters['sessionId'] != null) {
-            queryParameters['session_id'] = requestParameters['sessionId'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/subscriptions/callback`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => HandleStripeSubscriptionCallbackOutputBodyFromJSON(jsonValue));
-    }
-
-    /**
-     * Handle a subscription callback.
-     * Handle a subscription callback
-     */
-    async handleStripeSubscriptionCallback(requestParameters: HandleStripeSubscriptionCallbackRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HandleStripeSubscriptionCallbackOutputBody> {
-        const response = await this.handleStripeSubscriptionCallbackRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Update a subscription.
-     * Update a subscription
-     */
-    async updateAccountSubscriptionRaw(requestParameters: UpdateAccountSubscriptionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateAccountSubscriptionOutputBody>> {
-        if (requestParameters['accountId'] == null) {
+    async handleStripeWebhookRaw(requestParameters: HandleStripeWebhookRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['body'] == null) {
             throw new runtime.RequiredError(
-                'accountId',
-                'Required parameter "accountId" was null or undefined when calling updateAccountSubscription().'
+                'body',
+                'Required parameter "body" was null or undefined when calling handleStripeWebhook().'
             );
         }
 
         const queryParameters: any = {};
 
-        if (requestParameters['priceId'] != null) {
-            queryParameters['priceId'] = requestParameters['priceId'];
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
+        headerParameters['Content-Type'] = 'application/json';
 
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
+        if (requestParameters['stripeSignature'] != null) {
+            headerParameters['Stripe-Signature'] = String(requestParameters['stripeSignature']);
         }
+
         const response = await this.request({
-            path: `/subscriptions/account/{accountId}`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
-            method: 'PUT',
+            path: `/subscriptions/webhook`,
+            method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: requestParameters['body'] as any,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UpdateAccountSubscriptionOutputBodyFromJSON(jsonValue));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
-     * Update a subscription.
-     * Update a subscription
+     * Handle a stripe webhook.
+     * Handle a stripe webhook
      */
-    async updateAccountSubscription(requestParameters: UpdateAccountSubscriptionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateAccountSubscriptionOutputBody> {
-        const response = await this.updateAccountSubscriptionRaw(requestParameters, initOverrides);
-        return await response.value();
+    async handleStripeWebhook(requestParameters: HandleStripeWebhookRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.handleStripeWebhookRaw(requestParameters, initOverrides);
     }
 
 }

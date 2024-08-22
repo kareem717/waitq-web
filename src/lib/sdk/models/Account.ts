@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { ParsedEmail } from './ParsedEmail';
+import {
+    ParsedEmailFromJSON,
+    ParsedEmailFromJSONTyped,
+    ParsedEmailToJSON,
+} from './ParsedEmail';
+
 /**
  * 
  * @export
@@ -36,7 +43,31 @@ export interface Account {
      * @type {string}
      * @memberof Account
      */
+    email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Account
+     */
     id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Account
+     */
+    name: string;
+    /**
+     * 
+     * @type {ParsedEmail}
+     * @memberof Account
+     */
+    parsedEmail: ParsedEmail;
+    /**
+     * 
+     * @type {string}
+     * @memberof Account
+     */
+    stripeCustomerID: string;
     /**
      * 
      * @type {Date}
@@ -49,12 +80,6 @@ export interface Account {
      * @memberof Account
      */
     userId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Account
-     */
-    username: string;
 }
 
 /**
@@ -63,10 +88,13 @@ export interface Account {
 export function instanceOfAccount(value: object): value is Account {
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('deletedAt' in value) || value['deletedAt'] === undefined) return false;
+    if (!('email' in value) || value['email'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('parsedEmail' in value) || value['parsedEmail'] === undefined) return false;
+    if (!('stripeCustomerID' in value) || value['stripeCustomerID'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     if (!('userId' in value) || value['userId'] === undefined) return false;
-    if (!('username' in value) || value['username'] === undefined) return false;
     return true;
 }
 
@@ -82,10 +110,13 @@ export function AccountFromJSONTyped(json: any, ignoreDiscriminator: boolean): A
         
         'createdAt': (new Date(json['createdAt'])),
         'deletedAt': (json['deletedAt'] == null ? null : new Date(json['deletedAt'])),
+        'email': json['email'],
         'id': json['id'],
+        'name': json['name'],
+        'parsedEmail': ParsedEmailFromJSON(json['parsedEmail']),
+        'stripeCustomerID': json['stripeCustomerID'],
         'updatedAt': (json['updatedAt'] == null ? null : new Date(json['updatedAt'])),
         'userId': json['userId'],
-        'username': json['username'],
     };
 }
 
@@ -97,10 +128,13 @@ export function AccountToJSON(value?: Account | null): any {
         
         'createdAt': ((value['createdAt']).toISOString()),
         'deletedAt': (value['deletedAt'] == null ? null : (value['deletedAt'] as any).toISOString()),
+        'email': value['email'],
         'id': value['id'],
+        'name': value['name'],
+        'parsedEmail': ParsedEmailToJSON(value['parsedEmail']),
+        'stripeCustomerID': value['stripeCustomerID'],
         'updatedAt': (value['updatedAt'] == null ? null : (value['updatedAt'] as any).toISOString()),
         'userId': value['userId'],
-        'username': value['username'],
     };
 }
 

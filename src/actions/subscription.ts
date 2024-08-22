@@ -15,22 +15,6 @@ export const getSubscriptionByAccountId = actionClient
 		});
 	});
 
-export const updateSubscription = actionClient
-	.schema(
-		z.object({
-			accountId: z.string().uuid(),
-			priceId: z.string(),
-		})
-	)
-	.action(
-		async ({ parsedInput: { accountId, priceId }, ctx: { apiClient } }) => {
-			return await apiClient.subscriptionsApi.updateAccountSubscription({
-				accountId,
-				priceId,
-			});
-		}
-	);
-
 export const getSubscriptionCheckoutLink = actionClient
 	.schema(
 		z.object({
@@ -47,14 +31,18 @@ export const getSubscriptionCheckoutLink = actionClient
 		}
 	);
 
-export const cancelSubscription = actionClient
+export const getBillingPortalLink = actionClient
 	.schema(
 		z.object({
 			accountId: z.string().uuid(),
+			redirectUrl: z.string(),
 		})
 	)
-	.action(async ({ parsedInput: { accountId }, ctx: { apiClient } }) => {
-		return await apiClient.subscriptionsApi.cancelAccountSubscription({
-			accountId,
-		});
-	});
+	.action(
+		async ({ parsedInput: { accountId, redirectUrl }, ctx: { apiClient } }) => {
+			return await apiClient.subscriptionsApi.getStripeBillingPortalLink({
+				accountId,
+				redirectUrl,
+			});
+		}
+	);

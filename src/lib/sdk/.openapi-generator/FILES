@@ -9,7 +9,6 @@ models/Account.ts
 models/AccountSubscription.ts
 models/AddEmailsInputBody.ts
 models/AddEmailsOutputBody.ts
-models/CancelAccountSubscriptionOutputBody.ts
 models/CreateAccountFieldsStruct.ts
 models/CreateAccountInputBody.ts
 models/CreateAccountOutputBody.ts
@@ -27,13 +26,13 @@ models/GetEmailsByWaitlistIDInputBody.ts
 models/GetEmailsByWaitlistIDOutputBody.ts
 models/GetPublicManyWaitlistsInputBody.ts
 models/GetPublicManyWaitlistsOutputBody.ts
+models/GetStripeBillingPortalLinkOutputBody.ts
 models/GetStripeCheckoutLinkOutputBody.ts
 models/GetUnsubscribedEmailJWTOutputBody.ts
 models/GetWaitlistAnalyticsOutputBody.ts
 models/GetWaitlistByAccountIDInputBody.ts
 models/GetWaitlistByAccountIDOutputBody.ts
 models/GetWaitlistByURLAliasOutputBody.ts
-models/HandleStripeSubscriptionCallbackOutputBody.ts
 models/HealthCheckOutputBody.ts
 models/MessageOutputBody.ts
 models/PaginationRequest.ts
@@ -46,7 +45,6 @@ models/UnsubscribeEmailOutputBody.ts
 models/UpdateAccountFieldsStruct.ts
 models/UpdateAccountInputBody.ts
 models/UpdateAccountOutputBody.ts
-models/UpdateAccountSubscriptionOutputBody.ts
 models/UpdateWaitlistFieldsStruct.ts
 models/UpdateWaitlistInputBody.ts
 models/UpdateWaitlistJWTSecretFieldsStruct.ts

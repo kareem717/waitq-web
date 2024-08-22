@@ -14,7 +14,6 @@ const RedirectConfig = {
 		dashboard: "/dashboard",
 		settings: {
 			account: "/settings/account",
-			billing: "/settings/billing",
 		},
 		waitlist: {
 			create: "/waitlist/create",

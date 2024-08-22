@@ -23,7 +23,8 @@ import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 
 const formSchema = z.object({
-	username: z.string().min(3).max(32),
+	name: z.string().min(3).max(32),
+	email: z.string().email(),
 });
 
 export const CreateAccountForm = () => {
@@ -34,7 +35,8 @@ export const CreateAccountForm = () => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			username: "",
+			name: "",
+			email: user?.email || "",
 		},
 	});
 
@@ -63,7 +65,7 @@ export const CreateAccountForm = () => {
 		}
 
 		await executeAsync({
-			username: values.username,
+			...values,
 			userId: user.id
 		});
 	}
@@ -74,12 +76,12 @@ export const CreateAccountForm = () => {
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 				<FormField
 					control={form.control}
-					name="username"
+					name="name"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Username</FormLabel>
+							<FormLabel>Name</FormLabel>
 							<FormControl>
-								<Input placeholder="jimmy77" {...field} />
+								<Input placeholder="Jimmy" {...field} />
 							</FormControl>
 							<FormDescription>
 								This is your public display name.
@@ -88,8 +90,21 @@ export const CreateAccountForm = () => {
 						</FormItem>
 					)}
 				/>
+				<FormField
+					control={form.control}
+					name="email"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Email</FormLabel>
+							<FormControl>
+								<Input placeholder="jimmy@example.com" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 				<Button type="submit" className="w-full flex justify-center items-center">
-					{isCreating && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}  Create account
+						{isCreating && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}  Create account
 				</Button>
 			</form>
 		</Form>

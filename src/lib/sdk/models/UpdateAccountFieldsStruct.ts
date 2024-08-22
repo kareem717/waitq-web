@@ -24,14 +24,21 @@ export interface UpdateAccountFieldsStruct {
      * @type {string}
      * @memberof UpdateAccountFieldsStruct
      */
-    username: string;
+    email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateAccountFieldsStruct
+     */
+    name: string;
 }
 
 /**
  * Check if a given object implements the UpdateAccountFieldsStruct interface.
  */
 export function instanceOfUpdateAccountFieldsStruct(value: object): value is UpdateAccountFieldsStruct {
-    if (!('username' in value) || value['username'] === undefined) return false;
+    if (!('email' in value) || value['email'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 
@@ -45,7 +52,8 @@ export function UpdateAccountFieldsStructFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'username': json['username'],
+        'email': json['email'],
+        'name': json['name'],
     };
 }
 
@@ -55,7 +63,8 @@ export function UpdateAccountFieldsStructToJSON(value?: UpdateAccountFieldsStruc
     }
     return {
         
-        'username': value['username'],
+        'email': value['email'],
+        'name': value['name'],
     };
 }
 
