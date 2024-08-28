@@ -4,7 +4,7 @@ import AuthProvider from "@/components/providers/auth-provider";
 import createClient from "@/lib/utils/supabase/server";
 import { getAccountByUserId } from "@/actions/auth";
 import { cache } from 'react';
-import { getSubscriptionByAccountId } from "@/actions/subscription";
+import { getSubscriptionByAccountId } from "@/actions/billing";
 
 export const getCachedUser = cache(async () => {
   const supabase = createClient()

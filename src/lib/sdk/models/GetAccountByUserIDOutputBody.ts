@@ -34,16 +34,10 @@ export interface GetAccountByUserIDOutputBody {
     readonly $schema?: string;
     /**
      * 
-     * @type {Array<Account>}
+     * @type {Account}
      * @memberof GetAccountByUserIDOutputBody
      */
-    accounts: Array<Account>;
-    /**
-     * 
-     * @type {number}
-     * @memberof GetAccountByUserIDOutputBody
-     */
-    count: number;
+    accounts: Account;
     /**
      * 
      * @type {string}
@@ -57,7 +51,6 @@ export interface GetAccountByUserIDOutputBody {
  */
 export function instanceOfGetAccountByUserIDOutputBody(value: object): value is GetAccountByUserIDOutputBody {
     if (!('accounts' in value) || value['accounts'] === undefined) return false;
-    if (!('count' in value) || value['count'] === undefined) return false;
     if (!('message' in value) || value['message'] === undefined) return false;
     return true;
 }
@@ -73,8 +66,7 @@ export function GetAccountByUserIDOutputBodyFromJSONTyped(json: any, ignoreDiscr
     return {
         
         '$schema': json['$schema'] == null ? undefined : json['$schema'],
-        'accounts': ((json['accounts'] as Array<any>).map(AccountFromJSON)),
-        'count': json['count'],
+        'accounts': AccountFromJSON(json['accounts']),
         'message': json['message'],
     };
 }
@@ -85,8 +77,7 @@ export function GetAccountByUserIDOutputBodyToJSON(value?: Omit<GetAccountByUser
     }
     return {
         
-        'accounts': ((value['accounts'] as Array<any>).map(AccountToJSON)),
-        'count': value['count'],
+        'accounts': AccountToJSON(value['accounts']),
         'message': value['message'],
     };
 }

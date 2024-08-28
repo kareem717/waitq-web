@@ -1,7 +1,7 @@
 .openapi-generator-ignore
 apis/AccountsApi.ts
+apis/BillingApi.ts
 apis/HealthApi.ts
-apis/SubscriptionsApi.ts
 apis/WaitlistsApi.ts
 apis/index.ts
 index.ts
@@ -26,14 +26,13 @@ models/GetEmailsByWaitlistIDInputBody.ts
 models/GetEmailsByWaitlistIDOutputBody.ts
 models/GetPublicManyWaitlistsInputBody.ts
 models/GetPublicManyWaitlistsOutputBody.ts
-models/GetStripeBillingPortalLinkOutputBody.ts
-models/GetStripeCheckoutLinkOutputBody.ts
 models/GetUnsubscribedEmailJWTOutputBody.ts
 models/GetWaitlistAnalyticsOutputBody.ts
 models/GetWaitlistByAccountIDInputBody.ts
 models/GetWaitlistByAccountIDOutputBody.ts
 models/GetWaitlistByURLAliasOutputBody.ts
 models/HealthCheckOutputBody.ts
+models/LinkOutputBody.ts
 models/MessageOutputBody.ts
 models/PaginationRequest.ts
 models/ParsedEmail.ts

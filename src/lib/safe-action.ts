@@ -3,7 +3,7 @@ import {
 	DEFAULT_SERVER_ERROR_MESSAGE,
 } from "next-safe-action";
 
-import { AccountsApi, WaitlistsApi, SubscriptionsApi } from "@/lib/sdk/apis";
+import { AccountsApi, WaitlistsApi, BillingApi } from "@/lib/sdk/apis";
 import { Configuration, ResponseError } from "@/lib/sdk/runtime";
 import { env } from "@/env";
 import supabase from "@/lib/utils/supabase/server";
@@ -21,14 +21,10 @@ const apiClient = (accessToken?: string) => {
 		accessToken,
 	});
 
-	const accountsApi = new AccountsApi(apiClient);
-	const waitlistsApi = new WaitlistsApi(apiClient);
-	const subscriptionsApi = new SubscriptionsApi(apiClient);
-
 	return {
-		accountsApi,
-		waitlistsApi,
-		subscriptionsApi,
+		accountsApi: new AccountsApi(apiClient),
+		waitlistsApi: new WaitlistsApi(apiClient),
+		billingApi: new BillingApi(apiClient),
 	};
 };
 

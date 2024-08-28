@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { ComponentPropsWithoutRef, FC, useState } from "react"
 import { cn } from "@/lib/utils"
-import { getSubscriptionCheckoutLink } from "@/actions/subscription";
+import { getSubscriptionCheckoutLink } from "@/actions/billing";
 import redirects from "@/config/redirects";
 import { usePriceToggle } from "./use-duration-toggle";
 import { useAction } from "next-safe-action/hooks";

@@ -1,4 +1,4 @@
-import { getBillingPortalLink } from "@/actions/subscription"
+import { getBillingPortalLink } from "@/actions/billing"
 import {
   Card,
   CardContent,

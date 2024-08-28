@@ -48,6 +48,12 @@ export interface AccountSubscription {
      * @type {string}
      * @memberof AccountSubscription
      */
+    stripeCustomerID: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountSubscription
+     */
     stripePriceID: string;
     /**
      * 
@@ -77,6 +83,7 @@ export function instanceOfAccountSubscription(value: object): value is AccountSu
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('deletedAt' in value) || value['deletedAt'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('stripeCustomerID' in value) || value['stripeCustomerID'] === undefined) return false;
     if (!('stripePriceID' in value) || value['stripePriceID'] === undefined) return false;
     if (!('stripeSubscriptionID' in value) || value['stripeSubscriptionID'] === undefined) return false;
     if (!('subscriptionId' in value) || value['subscriptionId'] === undefined) return false;
@@ -98,6 +105,7 @@ export function AccountSubscriptionFromJSONTyped(json: any, ignoreDiscriminator:
         'createdAt': (new Date(json['createdAt'])),
         'deletedAt': (json['deletedAt'] == null ? null : new Date(json['deletedAt'])),
         'id': json['id'],
+        'stripeCustomerID': json['stripeCustomerID'],
         'stripePriceID': json['stripePriceID'],
         'stripeSubscriptionID': json['stripeSubscriptionID'],
         'subscriptionId': json['subscriptionId'],
@@ -115,6 +123,7 @@ export function AccountSubscriptionToJSON(value?: AccountSubscription | null): a
         'createdAt': ((value['createdAt']).toISOString()),
         'deletedAt': (value['deletedAt'] == null ? null : (value['deletedAt'] as any).toISOString()),
         'id': value['id'],
+        'stripeCustomerID': value['stripeCustomerID'],
         'stripePriceID': value['stripePriceID'],
         'stripeSubscriptionID': value['stripeSubscriptionID'],
         'subscriptionId': value['subscriptionId'],

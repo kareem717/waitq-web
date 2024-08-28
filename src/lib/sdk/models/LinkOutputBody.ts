@@ -16,43 +16,43 @@ import { mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface GetStripeCheckoutLinkOutputBody
+ * @interface LinkOutputBody
  */
-export interface GetStripeCheckoutLinkOutputBody {
+export interface LinkOutputBody {
     /**
      * A URL to the JSON Schema for this object.
      * @type {string}
-     * @memberof GetStripeCheckoutLinkOutputBody
+     * @memberof LinkOutputBody
      */
     readonly $schema?: string;
     /**
      * 
      * @type {string}
-     * @memberof GetStripeCheckoutLinkOutputBody
+     * @memberof LinkOutputBody
      */
     link: string;
     /**
      * 
      * @type {string}
-     * @memberof GetStripeCheckoutLinkOutputBody
+     * @memberof LinkOutputBody
      */
     message: string;
 }
 
 /**
- * Check if a given object implements the GetStripeCheckoutLinkOutputBody interface.
+ * Check if a given object implements the LinkOutputBody interface.
  */
-export function instanceOfGetStripeCheckoutLinkOutputBody(value: object): value is GetStripeCheckoutLinkOutputBody {
+export function instanceOfLinkOutputBody(value: object): value is LinkOutputBody {
     if (!('link' in value) || value['link'] === undefined) return false;
     if (!('message' in value) || value['message'] === undefined) return false;
     return true;
 }
 
-export function GetStripeCheckoutLinkOutputBodyFromJSON(json: any): GetStripeCheckoutLinkOutputBody {
-    return GetStripeCheckoutLinkOutputBodyFromJSONTyped(json, false);
+export function LinkOutputBodyFromJSON(json: any): LinkOutputBody {
+    return LinkOutputBodyFromJSONTyped(json, false);
 }
 
-export function GetStripeCheckoutLinkOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): GetStripeCheckoutLinkOutputBody {
+export function LinkOutputBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): LinkOutputBody {
     if (json == null) {
         return json;
     }
@@ -64,7 +64,7 @@ export function GetStripeCheckoutLinkOutputBodyFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function GetStripeCheckoutLinkOutputBodyToJSON(value?: Omit<GetStripeCheckoutLinkOutputBody, '$schema'> | null): any {
+export function LinkOutputBodyToJSON(value?: Omit<LinkOutputBody, '$schema'> | null): any {
     if (value == null) {
         return value;
     }

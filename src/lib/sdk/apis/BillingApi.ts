@@ -17,19 +17,22 @@ import * as runtime from '../runtime';
 import type {
   ErrorModel,
   GetAccountSubscriptionOutputBody,
-  GetStripeBillingPortalLinkOutputBody,
-  GetStripeCheckoutLinkOutputBody,
+  LinkOutputBody,
 } from '../models/index';
 import {
     ErrorModelFromJSON,
     ErrorModelToJSON,
     GetAccountSubscriptionOutputBodyFromJSON,
     GetAccountSubscriptionOutputBodyToJSON,
-    GetStripeBillingPortalLinkOutputBodyFromJSON,
-    GetStripeBillingPortalLinkOutputBodyToJSON,
-    GetStripeCheckoutLinkOutputBodyFromJSON,
-    GetStripeCheckoutLinkOutputBodyToJSON,
+    LinkOutputBodyFromJSON,
+    LinkOutputBodyToJSON,
 } from '../models/index';
+
+export interface GetAccountCheckoutLinkRequest {
+    accountId: string;
+    priceId: string;
+    redirectUrl?: string;
+}
 
 export interface GetAccountSubscriptionRequest {
     accountId: string;
@@ -37,12 +40,6 @@ export interface GetAccountSubscriptionRequest {
 
 export interface GetStripeBillingPortalLinkRequest {
     accountId: string;
-    redirectUrl?: string;
-}
-
-export interface GetStripeCheckoutLinkRequest {
-    priceId: string;
-    accountId?: string;
     redirectUrl?: string;
 }
 
@@ -54,11 +51,65 @@ export interface HandleStripeWebhookRequest {
 /**
  * 
  */
-export class SubscriptionsApi extends runtime.BaseAPI {
+export class BillingApi extends runtime.BaseAPI {
 
     /**
-     * Get a subscription.
-     * Get a subscription
+     * Get a stripe checkout link.
+     * Get a stripe checkout link
+     */
+    async getAccountCheckoutLinkRaw(requestParameters: GetAccountCheckoutLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LinkOutputBody>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling getAccountCheckoutLink().'
+            );
+        }
+
+        if (requestParameters['priceId'] == null) {
+            throw new runtime.RequiredError(
+                'priceId',
+                'Required parameter "priceId" was null or undefined when calling getAccountCheckoutLink().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['redirectUrl'] != null) {
+            queryParameters['redirectUrl'] = requestParameters['redirectUrl'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/billing/account/{accountId}/checkout/{priceId}`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))).replace(`{${"priceId"}}`, encodeURIComponent(String(requestParameters['priceId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => LinkOutputBodyFromJSON(jsonValue));
+    }
+
+    /**
+     * Get a stripe checkout link.
+     * Get a stripe checkout link
+     */
+    async getAccountCheckoutLink(requestParameters: GetAccountCheckoutLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LinkOutputBody> {
+        const response = await this.getAccountCheckoutLinkRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get account subscription.
+     * Get account subscription
      */
     async getAccountSubscriptionRaw(requestParameters: GetAccountSubscriptionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetAccountSubscriptionOutputBody>> {
         if (requestParameters['accountId'] == null) {
@@ -81,7 +132,7 @@ export class SubscriptionsApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/subscriptions/account/{accountId}`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            path: `/billing/account/{accountId}/subscription`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -91,8 +142,8 @@ export class SubscriptionsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Get a subscription.
-     * Get a subscription
+     * Get account subscription.
+     * Get account subscription
      */
     async getAccountSubscription(requestParameters: GetAccountSubscriptionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetAccountSubscriptionOutputBody> {
         const response = await this.getAccountSubscriptionRaw(requestParameters, initOverrides);
@@ -100,10 +151,10 @@ export class SubscriptionsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Get a stripe billing portal link.
-     * Get a stripe billing portal link
+     * Get a stripe billing portal link for an account.
+     * Get a stripe billing portal link for an account
      */
-    async getStripeBillingPortalLinkRaw(requestParameters: GetStripeBillingPortalLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStripeBillingPortalLinkOutputBody>> {
+    async getStripeBillingPortalLinkRaw(requestParameters: GetStripeBillingPortalLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LinkOutputBody>> {
         if (requestParameters['accountId'] == null) {
             throw new runtime.RequiredError(
                 'accountId',
@@ -128,72 +179,21 @@ export class SubscriptionsApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/subscriptions/billing-portal/{accountId}`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            path: `/billing/account/{accountId}/billing-portal`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetStripeBillingPortalLinkOutputBodyFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LinkOutputBodyFromJSON(jsonValue));
     }
 
     /**
-     * Get a stripe billing portal link.
-     * Get a stripe billing portal link
+     * Get a stripe billing portal link for an account.
+     * Get a stripe billing portal link for an account
      */
-    async getStripeBillingPortalLink(requestParameters: GetStripeBillingPortalLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStripeBillingPortalLinkOutputBody> {
+    async getStripeBillingPortalLink(requestParameters: GetStripeBillingPortalLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LinkOutputBody> {
         const response = await this.getStripeBillingPortalLinkRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Get a stripe checkout link.
-     * Get a stripe checkout link
-     */
-    async getStripeCheckoutLinkRaw(requestParameters: GetStripeCheckoutLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetStripeCheckoutLinkOutputBody>> {
-        if (requestParameters['priceId'] == null) {
-            throw new runtime.RequiredError(
-                'priceId',
-                'Required parameter "priceId" was null or undefined when calling getStripeCheckoutLink().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['accountId'] != null) {
-            queryParameters['accountId'] = requestParameters['accountId'];
-        }
-
-        if (requestParameters['redirectUrl'] != null) {
-            queryParameters['redirectUrl'] = requestParameters['redirectUrl'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/subscriptions/{priceId}`.replace(`{${"priceId"}}`, encodeURIComponent(String(requestParameters['priceId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetStripeCheckoutLinkOutputBodyFromJSON(jsonValue));
-    }
-
-    /**
-     * Get a stripe checkout link.
-     * Get a stripe checkout link
-     */
-    async getStripeCheckoutLink(requestParameters: GetStripeCheckoutLinkRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetStripeCheckoutLinkOutputBody> {
-        const response = await this.getStripeCheckoutLinkRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -220,7 +220,7 @@ export class SubscriptionsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/subscriptions/webhook`,
+            path: `/billing/webhook`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,

@@ -10,7 +10,7 @@ export const getSubscriptionByAccountId = actionClient
 		})
 	)
 	.action(async ({ parsedInput: { accountId }, ctx: { apiClient } }) => {
-		return await apiClient.subscriptionsApi.getAccountSubscription({
+		return await apiClient.billingApi.getAccountSubscription({
 			accountId,
 		});
 	});
@@ -28,7 +28,7 @@ export const getSubscriptionCheckoutLink = actionClient
 			parsedInput: { priceId, redirectUrl, accountId },
 			ctx: { apiClient },
 		}) => {
-			return await apiClient.subscriptionsApi.getStripeCheckoutLink({
+			return await apiClient.billingApi.getAccountCheckoutLink({
 				accountId,
 				priceId,
 				redirectUrl,
@@ -45,7 +45,7 @@ export const getBillingPortalLink = actionClient
 	)
 	.action(
 		async ({ parsedInput: { accountId, redirectUrl }, ctx: { apiClient } }) => {
-			return await apiClient.subscriptionsApi.getStripeBillingPortalLink({
+			return await apiClient.billingApi.getStripeBillingPortalLink({
 				accountId,
 				redirectUrl,
 			});

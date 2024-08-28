@@ -49,5 +49,5 @@ export const getAccountByUserId = actionClient
 			includeDeleted: false,
 		});
 
-		return response.accounts[0];
+		return response.accounts;
 	});

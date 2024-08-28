@@ -64,12 +64,6 @@ export interface Account {
     parsedEmail: ParsedEmail;
     /**
      * 
-     * @type {string}
-     * @memberof Account
-     */
-    stripeCustomerID: string;
-    /**
-     * 
      * @type {Date}
      * @memberof Account
      */
@@ -92,7 +86,6 @@ export function instanceOfAccount(value: object): value is Account {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('parsedEmail' in value) || value['parsedEmail'] === undefined) return false;
-    if (!('stripeCustomerID' in value) || value['stripeCustomerID'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     if (!('userId' in value) || value['userId'] === undefined) return false;
     return true;
@@ -114,7 +107,6 @@ export function AccountFromJSONTyped(json: any, ignoreDiscriminator: boolean): A
         'id': json['id'],
         'name': json['name'],
         'parsedEmail': ParsedEmailFromJSON(json['parsedEmail']),
-        'stripeCustomerID': json['stripeCustomerID'],
         'updatedAt': (json['updatedAt'] == null ? null : new Date(json['updatedAt'])),
         'userId': json['userId'],
     };
@@ -132,7 +124,6 @@ export function AccountToJSON(value?: Account | null): any {
         'id': value['id'],
         'name': value['name'],
         'parsedEmail': ParsedEmailToJSON(value['parsedEmail']),
-        'stripeCustomerID': value['stripeCustomerID'],
         'updatedAt': (value['updatedAt'] == null ? null : (value['updatedAt'] as any).toISOString()),
         'userId': value['userId'],
     };

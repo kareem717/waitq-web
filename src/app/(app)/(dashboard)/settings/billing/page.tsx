@@ -19,7 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { getBillingPortalLink } from "@/actions/subscription";
+import { getBillingPortalLink } from "@/actions/billing";
 import { env } from "@/env";
 import redirects from "@/config/redirects";
 import Link from "next/link";
