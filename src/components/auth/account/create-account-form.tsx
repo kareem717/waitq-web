@@ -28,7 +28,7 @@ export interface CreateAccountFormProps extends ComponentPropsWithoutRef<"form">
 }
 
 const formSchema = z.object({
-	name: z.string().min(3).max(32),
+	name: z.string().min(3).max(10),
 	email: z.string().email(),
 });
 
@@ -69,10 +69,6 @@ export const CreateAccountForm: FC<CreateAccountFormProps> = ({ user, className,
 			throw new Error("User not found");
 		}
 
-		console.log({
-			...values,
-			userId: user.id
-		})
 		await executeAsync({
 			...values,
 			userId: user.id
