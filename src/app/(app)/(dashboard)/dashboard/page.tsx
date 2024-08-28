@@ -12,13 +12,28 @@ import {
 import redirects from "@/config/redirects"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { getCachedAccount } from "../../layout"
+import createClient from "@/lib/utils/supabase/server";
+import { getAccountByUserId } from "@/actions/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage({ searchParams }: { searchParams: { page: string | null, limit: string | null } }) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10
 
-  const account = await getCachedAccount()
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect(redirects.auth.login);
+  }
+
+  const accountResp = await getAccountByUserId({ userId: user.id });
+  const account = accountResp?.data;
+
+  if (!account) {
+    redirect(redirects.auth.createAccount);
+  }
+
   const waitlistResp = await getWaitlistByAccountId({
     accountId: account.id,
     paginationParams: {

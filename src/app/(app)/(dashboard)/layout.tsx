@@ -1,20 +1,11 @@
 import { MobileSidebar } from "@/components/app/sidebar"
 import { Sidebar } from "@/components/app/sidebar"
-import { getCachedAccount } from "../layout";
-import { redirect } from "next/navigation"
-import redirects from "@/config/redirects"
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const account = await getCachedAccount()
-
-  if (!account) {
-    redirect(redirects.auth.createAccount)
-  }
-
   return (
     <div className="relative grid w-full h-full grid-rows-[auto_1fr] md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
       <Sidebar className="row-span-full" />

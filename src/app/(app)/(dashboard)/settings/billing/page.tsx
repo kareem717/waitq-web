@@ -1,4 +1,3 @@
-import { getCachedAccount, getCachedSubscription } from "@/app/(app)/layout"
 import pricingPlans from "@/config/pricing";
 import landing from "@/config/landing";
 import { PlanCard } from "@/components/app/subscription-plan-card";
@@ -19,19 +18,36 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { getBillingPortalLink } from "@/actions/billing";
+import { getBillingPortalLink, getSubscriptionByAccountId } from "@/actions/billing";
 import { env } from "@/env";
 import redirects from "@/config/redirects";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import createClient from "@/lib/utils/supabase/server";
+import { getAccountByUserId } from "@/actions/auth";
+import { redirect } from "next/navigation";
+
 export default async function BillingSettingsPage({ searchParams }: { searchParams: { open?: string } }) {
   const { yearlyInsentive } = landing.pricing;
   const plans = pricingPlans
 
-  const account = await getCachedAccount()
-  const subscription = await getCachedSubscription()
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  if (subscription?.subscriptionRelationship) {
+  if (!user) {
+    redirect(redirects.auth.login);
+  }
+
+  const accountResp = await getAccountByUserId({ userId: user.id });
+  const account = accountResp?.data;
+
+  if (!account) {
+    redirect(redirects.auth.createAccount);
+  }
+
+  const subscription = await getSubscriptionByAccountId({ accountId: account.id })
+
+  if (subscription?.data?.subscriptionRelationship) {
     const resp = await getBillingPortalLink({
       accountId: account.id,
       redirectUrl: `${env.NEXT_PUBLIC_APP_URL}${redirects.app.settings.billing}`
@@ -50,7 +66,7 @@ export default async function BillingSettingsPage({ searchParams }: { searchPara
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div>
-            Current Plan: <span className="font-bold text-primary">{subscription.subscription.name}</span>
+            Current Plan: <span className="font-bold text-primary">{subscription.data.subscription.name}</span>
           </div>
           <Link
             href={billingPortalLink}

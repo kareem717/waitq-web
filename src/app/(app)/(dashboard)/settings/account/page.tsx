@@ -1,4 +1,3 @@
-import { getCachedAccount } from "@/app/(app)/layout"
 import { UpdateAccountForm } from "@/components/app/settings/account/update-account-form"
 import {
   Card,
@@ -7,9 +6,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import createClient from "@/lib/utils/supabase/server";
+import { getAccountByUserId } from "@/actions/auth";
+import { redirect } from "next/navigation";
+import redirects from "@/config/redirects";
 
 export default async function AccountSettingsPage() {
-  const account = await getCachedAccount()
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect(redirects.auth.login);
+  }
+
+  const accountResp = await getAccountByUserId({ userId: user.id });
+  const account = accountResp?.data;
+
+  if (!account) {
+    redirect(redirects.auth.createAccount);
+  }
+
 
   return (
     <Card className="max-w-md h-min">
