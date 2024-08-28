@@ -21,6 +21,6 @@
 			"@/*": ["./src/*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/app/waitlist/emails/email-actions.tss"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/app/waitlist/emails/email-actions.tss", "src/components/app/subscription-plan-card"],
 	"exclude": ["node_modules"]
 }

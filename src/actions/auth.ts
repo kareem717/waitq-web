@@ -43,10 +43,11 @@ export const updateAccount = actionClient
 export const getAccountByUserId = actionClient
 	.schema(z.object({ userId: z.string().uuid() }))
 	.action(async ({ parsedInput: { userId }, ctx: { apiClient } }) => {
+
 		const response = await apiClient.accountsApi.getAccountsByUserId({
 			userId,
 			includeDeleted: false,
 		});
 
-		return response.accounts[0]
+		return response.accounts[0];
 	});

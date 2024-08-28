@@ -20,11 +20,16 @@ export const getSubscriptionCheckoutLink = actionClient
 		z.object({
 			priceId: z.string(),
 			redirectUrl: z.string(),
+			accountId: z.string().uuid(),
 		})
 	)
 	.action(
-		async ({ parsedInput: { priceId, redirectUrl }, ctx: { apiClient } }) => {
+		async ({
+			parsedInput: { priceId, redirectUrl, accountId },
+			ctx: { apiClient },
+		}) => {
 			return await apiClient.subscriptionsApi.getStripeCheckoutLink({
+				accountId,
 				priceId,
 				redirectUrl,
 			});

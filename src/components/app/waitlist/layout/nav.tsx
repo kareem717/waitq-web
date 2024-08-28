@@ -30,7 +30,6 @@ export interface WaitlistNavProps extends ComponentPropsWithoutRef<"header"> {
 export const WaitlistNav: FC<WaitlistNavProps> = ({ className, waitlistId, ...props }) => {
   const { nav } = WaitlistConfig
 
-
   return (
     <header className={cn("sticky top-0 z-10 flex h-14 items-center gap-1 border-b bg-background px-4", className)} {...props}  >
       <div className="flex items-center justify-center gap-4">

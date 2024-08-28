@@ -1,3 +1,5 @@
+"use client"
+
 import { ComponentPropsWithoutRef, FC } from "react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
@@ -11,13 +13,15 @@ import NavigationConfig from "@/config/navigation"
 import { CollapseMenuButton } from "./collapsible-menu-button"
 import { Icons } from "@/components/icons";
 import { headers } from "next/headers"
+import { usePathname } from "next/navigation";
 
 export interface MenuProps extends ComponentPropsWithoutRef<"nav"> { }
 
 export const Menu: FC<MenuProps> = ({ className, ...props }) => {
-  const headersList = headers();
-  const fullUrl = headersList.get('referer') || "";
-  const path = fullUrl ? new URL(fullUrl).pathname : "";
+  // You can implement this without making it a client component
+  // but the current-selected menu item is not being highlighted
+  // properly - I think due to caching or something
+  const path = usePathname()
 
   const menuList = NavigationConfig.map(group => ({
     ...group,

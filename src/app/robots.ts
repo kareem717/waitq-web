@@ -9,7 +9,8 @@ export default function robots(): MetadataRoute.Robots {
 				userAgent: "*",
 				allow: ["/"],
 				disallow: [
-					`${redirects.app.settings}/*`,
+					`${redirects.app.settings.account}/*`,
+					`${redirects.app.settings.billing}/*`,
 					`${redirects.app.waitlist}/*`,
 					`${redirects.auth.callback}`,
 					`${redirects.auth.logout}`,

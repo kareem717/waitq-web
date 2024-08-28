@@ -51,6 +51,7 @@ export const CreateAccountForm: FC<CreateAccountFormProps> = ({ user, className,
 			router.refresh();
 		},
 		onError: ({ error }) => {
+			console.log(error)
 			toast.error("Something went wrong", {
 				description: error.serverError || "An unknown error occurred",
 			})

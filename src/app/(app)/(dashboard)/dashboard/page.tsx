@@ -1,4 +1,3 @@
-import { getAccountByUserId } from "@/actions/auth"
 import { getWaitlistByAccountId } from "@/actions/waitlist"
 import { WaitlistIndexCard } from "@/components/app/waitlist/index-card"
 import { Icons } from "@/components/icons"
@@ -12,27 +11,14 @@ import {
 } from "@/components/ui/pagination"
 import redirects from "@/config/redirects"
 import { cn } from "@/lib/utils"
-import createClient from "@/lib/utils/supabase/server"
 import Link from "next/link"
+import { getCachedAccount } from "../../layout"
 
 export default async function DashboardPage({ searchParams }: { searchParams: { page: string | null, limit: string | null } }) {
   const page = searchParams.page ? parseInt(searchParams.page) : 1
   const limit = searchParams.limit ? parseInt(searchParams.limit) : 10
 
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    throw new Error("No user found")
-  }
-
-  const accountResponse = await getAccountByUserId({ userId: user.id })
-  const account  = accountResponse?.data
-
-  if (!account) {
-    throw new Error("No account found")
-  }
-
+  const account = await getCachedAccount()
   const waitlistResp = await getWaitlistByAccountId({
     accountId: account.id,
     paginationParams: {
@@ -43,7 +29,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
 
   const data = waitlistResp?.data
 
-  if (waitlistResp?.serverError || waitlistResp?.validationErrors) {
+  if (!data) {
     throw new Error(waitlistResp?.serverError || "Something went wrong")
   }
 

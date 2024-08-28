@@ -1,4 +1,4 @@
-import { CreateAccountForm } from "@/components/app/account/create-account-form";
+import { CreateAccountForm } from "@/components/auth/account/create-account-form";
 import redirects from "@/config/redirects";
 import { redirect } from "next/navigation";
 import createClient from "@/lib/utils/supabase/server";

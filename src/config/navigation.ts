@@ -43,6 +43,13 @@ const NavigationConfig: Group[] = [
 				icon: "users",
 				submenus: [],
 			},
+			{
+				href: redirects.app.settings.billing,
+				label: "Billing",
+				pathIdentifier: redirects.app.settings.billing,
+				icon: "billing",
+				submenus: [],
+			},
 		],
 	},
 ];

@@ -15,8 +15,10 @@ export const metadata: Metadata = {
 
 export default function CreateWaitlistPage() {
   return (
-    <div className="flex flex-col  justify-center w-full h-full p-2 gap-16">
-      <LogoDiv />
+    <div className="flex flex-col justify-center w-full h-full p-2 gap-16">
+      <div className="flex flex-col items-start w-full">
+        <LogoDiv />
+      </div>
       <div className="flex flex-col items-center w-full h-full">
         <Card className="w-full max-w-2xl">
           <CardHeader>

@@ -1,4 +1,4 @@
-const RedirectConfig = {
+const redirects = {
 	home: "/",
 	privacy: "/privacy-policy",
 	terms: "/terms-of-service",
@@ -14,6 +14,7 @@ const RedirectConfig = {
 		dashboard: "/dashboard",
 		settings: {
 			account: "/settings/account",
+			billing: "/settings/billing",
 		},
 		waitlist: {
 			create: "/waitlist/create",
@@ -30,4 +31,4 @@ const RedirectConfig = {
 	},
 };
 
-export default RedirectConfig;
+export default redirects;

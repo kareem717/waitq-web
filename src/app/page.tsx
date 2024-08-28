@@ -5,40 +5,18 @@ import { Hero } from "@/components/landing/hero"
 import { Benefits } from "@/components/landing/benefits"
 import { Features } from "@/components/landing/features"
 import { Services } from "@/components/landing/services"
-import { Pricing } from "@/components/landing/pricing"
-import Image from "next/image"
-import createClient from "@/lib/utils/supabase/server"
-import { getAccountByUserId } from "@/actions/auth"
+import { PricingSection } from "@/components/landing/pricing"
 
 
 export default async function HomePage() {
-  const supabase = createClient();
-
-  const { data: { session } } = await supabase.auth.getSession();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  let accountRes;
-  if (user?.id) {
-    accountRes = await getAccountByUserId({ userId: user.id });
-  }
-
-  const res = {
-    session,
-    account: accountRes?.data,
-    user,
-  }
-
   return (
     <>
-      <div className="max-w-md break-words">
-        {JSON.stringify(res, null, 2)}
-      </div>
       <LandingNav />
       <Hero />
       <Benefits />
       <Features />
       <Services />
-      <Pricing />
+      <PricingSection />
       <FAQ />
       <LandingFooter />
     </>

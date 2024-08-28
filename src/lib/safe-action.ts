@@ -34,8 +34,9 @@ const apiClient = (accessToken?: string) => {
 
 export const actionClient = createSafeActionClient({
 	handleReturnedServerError: async (error) => {
+		console.log(error);
+
 		if (error instanceof ResponseError) {
-			console.error(error.cause);
 			try {
 				const resp = (await error.response.json()) as ErrorModel;
 

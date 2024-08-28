@@ -44,14 +44,13 @@ export const UpdateAccountForm: FC<UpdateAccountFormProps> = ({ account, classNa
     },
   });
 
-
   const { executeAsync } = useAction(updateAccount, {
     onSuccess: () => {
       toast.success("Account updated successfully!");
-      form.reset();
       router.refresh();
     },
     onError: ({ error }) => {
+      console.log(error);
       toast.error("Something went wrong", {
         description: error.serverError || "An unknown error occurred",
       })

@@ -36,13 +36,7 @@ export interface ParsedEmail {
      * @type {string}
      * @memberof ParsedEmail
      */
-    localPart: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ParsedEmail
-     */
-    plainAddress: string;
+    local: string;
     /**
      * 
      * @type {string}
@@ -57,8 +51,7 @@ export interface ParsedEmail {
 export function instanceOfParsedEmail(value: object): value is ParsedEmail {
     if (!('domain' in value) || value['domain'] === undefined) return false;
     if (!('host' in value) || value['host'] === undefined) return false;
-    if (!('localPart' in value) || value['localPart'] === undefined) return false;
-    if (!('plainAddress' in value) || value['plainAddress'] === undefined) return false;
+    if (!('local' in value) || value['local'] === undefined) return false;
     if (!('tld' in value) || value['tld'] === undefined) return false;
     return true;
 }
@@ -75,8 +68,7 @@ export function ParsedEmailFromJSONTyped(json: any, ignoreDiscriminator: boolean
         
         'domain': json['domain'],
         'host': json['host'],
-        'localPart': json['localPart'],
-        'plainAddress': json['plainAddress'],
+        'local': json['local'],
         'tld': json['tld'],
     };
 }
@@ -89,8 +81,7 @@ export function ParsedEmailToJSON(value?: ParsedEmail | null): any {
         
         'domain': value['domain'],
         'host': value['host'],
-        'localPart': value['localPart'],
-        'plainAddress': value['plainAddress'],
+        'local': value['local'],
         'tld': value['tld'],
     };
 }
