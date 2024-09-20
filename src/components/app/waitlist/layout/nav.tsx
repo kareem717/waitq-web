@@ -82,14 +82,14 @@ export const WaitlistNav: FC<WaitlistNavProps> = ({ className, waitlistId, ...pr
         </Sheet>
         <h1 className="text-xl font-semibold">Waitlist</h1>
       </div>
-      <Button
+      {/* <Button
         variant="outline"
         size="sm"
         className="ml-auto gap-1.5 text-sm"
       >
         <Share className="size-3.5" />
         Share
-      </Button>
+      </Button> */}
     </header>
   );
 };
