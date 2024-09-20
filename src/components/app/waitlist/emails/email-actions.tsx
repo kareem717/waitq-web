@@ -13,9 +13,10 @@ import { saveAs } from 'file-saver';
 
 export interface WaitlistEmailActionsProps extends ComponentPropsWithoutRef<typeof Card> {
   waitlistId: string
+  hasData: boolean
 }
 
-export const WaitlistEmailActions: FC<WaitlistEmailActionsProps> = ({ waitlistId, className, ...props }) => {
+export const WaitlistEmailActions: FC<WaitlistEmailActionsProps> = ({ waitlistId, className, hasData, ...props }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleExportToCSV = async () => {
@@ -42,7 +43,7 @@ export const WaitlistEmailActions: FC<WaitlistEmailActionsProps> = ({ waitlistId
       <CardContent className="flex flex-col gap-2">
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full">
+            <Button className="w-full" disabled={!hasData}>
               <Icons.fileDown className="mr-2 h-4 w-4" />
               Export to CSV
             </Button>
@@ -58,7 +59,7 @@ export const WaitlistEmailActions: FC<WaitlistEmailActionsProps> = ({ waitlistId
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button onClick={handleExportToCSV}>Export</Button>
+              <Button onClick={handleExportToCSV} disabled={!hasData}>Export</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

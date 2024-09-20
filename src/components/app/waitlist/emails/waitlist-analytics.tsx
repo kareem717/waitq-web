@@ -31,7 +31,7 @@ export const WaitlistAnalytics: FC<WaitlistAnalyticsProps> = ({ className, data,
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            {((activeEmails / totalEmails) * 100).toFixed(1)}% of total
+            {(((activeEmails / totalEmails) || 0) * 100).toFixed(1)}% of total
           </p>
         </CardContent>
       </Card>
@@ -47,7 +47,7 @@ export const WaitlistAnalytics: FC<WaitlistAnalyticsProps> = ({ className, data,
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            {((unsubscribedEmails / totalEmails) * 100).toFixed(1)}% of total
+            {(((unsubscribedEmails / totalEmails) || 0) * 100).toFixed(1)}% of total
           </p>
         </CardContent>
       </Card>
@@ -63,7 +63,7 @@ export const WaitlistAnalytics: FC<WaitlistAnalyticsProps> = ({ className, data,
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            {((deletedEmails / totalEmails) * 100).toFixed(1)}% of total
+            {(((deletedEmails / totalEmails) || 0) * 100).toFixed(1)}% of total
           </p>
         </CardContent>
       </Card>

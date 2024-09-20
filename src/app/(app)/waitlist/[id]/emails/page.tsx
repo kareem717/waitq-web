@@ -16,12 +16,14 @@ export default async function WaitlistEmailsPage({ params }: { params: { id: str
     throw new Error(resp?.serverError || "Something went wrong.");
   }
 
+  const hasData = resp.data.analytics.totalEmails > 0
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Emails</h1>
       <WaitlistAnalytics data={resp.data} />
       <div className="flex md:flex-col gap-6">
-        <WaitlistEmailActions waitlistId={params.id} />
+        <WaitlistEmailActions waitlistId={params.id} hasData={hasData} />
         <WaitlistAnalyticsChart data={resp.data.analytics} />
       </div>
     </div>
